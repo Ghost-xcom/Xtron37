@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xtron Chat</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="chat-container">
+        <!-- Chat Header -->
+        <!-- Chat Header -->
+<div class="chat-header">
+    <div class="header-left">
+        <h2><i class="fas fa-robot"></i> Xtron Assistant</h2>
+        <div class="prompts-dropdown">
+            <button class="dropdown-btn" id="promptsBtn">
+                <i class="fas fa-list"></i> Quick Prompts
+            </button>
+            <div class="dropdown-content" id="promptsDropdown">
+                <!-- Dropdown content will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+    <div class="header-icons">
+        <i class="fas fa-expand" id="expand-btn"></i>
+        <i class="fas fa-times" id="close-btn"></i>
+    </div>
+</div>
+
+        <!-- Messages Area -->
+        <div class="messages-container" id="messagesContainer">
+            <!-- Messages will be inserted here by JavaScript -->
+        </div>
+
+        <!-- Input Area -->
+        <div class="input-container">
+            <div class="input-group">
+                <input type="text" id="messageInput" placeholder="Type your message here..." autocomplete="off">
+                <button id="sendBtn">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+            <div class="quick-actions">
+                <button class="quick-btn" data-message="Hello">
+                    <i class="fas fa-hand"></i> Hello
+                </button>
+                <button class="quick-btn" data-message="Help">
+                    <i class="fas fa-question"></i> Help
+                </button>
+                <button class="quick-btn" data-message="What can you do?">
+                    <i class="fas fa-star"></i> Features
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

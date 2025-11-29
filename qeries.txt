@@ -1,0 +1,168 @@
+1.bhunaksa login for gangtok = username: rs_gtk
+                             password: rs@gtk
+
+2.bhunaksa login for gyalshing = username: rs_gey
+                             password: rs@gey
+
+3. bhunaksa login for namchi = username: rs_namchi
+                             password: rs@namchi
+
+4. bhunaksa login for mangan = username: rs_mangan
+                             password: rs@mangan
+
+5. bhunaksa login for pakyong = username: rs_paky
+                             password: rs@paky
+
+6. bhunaksa login for soreng = username: rs_soreng
+                             password: rs@soreng  
+
+
+7. query for number of ror = select count(distinct a.KhatiyanNo),d.LocationName
+from lr_Khatiyan as a inner join lr_Khasra as b on a.LocationCode=b.LocationCode and a.KhatiyanNo=b.KhatiyanNo
+inner join c_lr_Location as d on a.LocationCode=d.LocationCode
+where (b.Mflag is null or b.mflag='N')
+group by d.LocationName
+
+8. query for number of plots = 
+SELECT 
+    d.LocationName,
+    COUNT(DISTINCT b.KhasraNumber) AS TotalPlots
+FROM lr_Khatiyan a
+INNER JOIN lr_Khasra b 
+    ON a.LocationCode = b.LocationCode 
+   AND a.KhatiyanNo = b.KhatiyanNo
+INNER JOIN c_lr_Location d
+    ON a.LocationCode = d.LocationCode
+WHERE (b.Mflag IS NULL OR b.Mflag = 'N')   -- Active plots only
+GROUP BY d.LocationName
+ORDER BY d.LocationName;
+
+9. query to view records = 
+SELECT
+    *
+FROM lr_Khatiyan a 
+INNER JOIN lr_Khasra b 
+    ON a.LocationCode = b.LocationCode AND a.KhatiyanNo = b.KhatiyanNo
+INNER JOIN c_lr_Location d 
+    ON a.LocationCode = d.LocationCode
+WHERE (b.Mflag IS NULL OR b.Mflag = 'N') AND
+
+
+10. query to view records with lgd code = 
+SELECT
+    *
+FROM lr_Khatiyan a 
+INNER JOIN lr_Khasra b 
+    ON a.LocationCode = b.LocationCode AND a.KhatiyanNo = b.KhatiyanNo
+INNER JOIN c_lr_Location d 
+    ON a.LocationCode = d.LocationCode
+INNER JOIN SC_LGD_MASTER lgd
+    ON a.LocationCode = lgd.LocationCode
+WHERE 
+    b.Mflag IS NULL OR b.Mflag = 'N';
+
+11. query to view record with single n joint =
+SELECT 
+    a.OwnerName,
+    CASE 
+        WHEN 
+            a.OwnerName LIKE '%,%' OR 
+            a.OwnerName LIKE '% र %' OR 
+            a.OwnerName LIKE '% अनि %' OR 
+            a.OwnerName LIKE '% तथा %' OR 
+            a.OwnerName LIKE '%/%' OR 
+            a.OwnerName LIKE '% संग %' OR 
+            a.OwnerName LIKE '% एवं %'
+        THEN 'Joint'
+        ELSE 'Single'
+    END AS OwnershipType
+FROM lr_Khatiyan a
+INNER JOIN lr_Khasra b 
+    ON a.LocationCode = b.LocationCode AND a.KhatiyanNo = b.KhatiyanNo
+WHERE b.Mflag IS NULL OR b.Mflag = 'N'
+
+12. query to view single n joint as count =
+SELECT 
+    CASE 
+        WHEN 
+            a.OwnerName LIKE '%,%' OR 
+            a.OwnerName LIKE '% र %' OR 
+            a.OwnerName LIKE '% अनि %' OR 
+            a.OwnerName LIKE '% तथा %' OR 
+            a.OwnerName LIKE '%/%' OR 
+            a.OwnerName LIKE '% संग %' OR 
+            a.OwnerName LIKE '% एवं %'
+        THEN 'Joint'
+        ELSE 'Single'
+    END AS OwnershipType,
+    COUNT(*) AS CountOfOwners
+FROM lr_Khatiyan a
+INNER JOIN lr_Khasra b 
+    ON a.LocationCode = b.LocationCode AND a.KhatiyanNo = b.KhatiyanNo
+WHERE (b.Mflag IS NULL OR b.Mflag = 'N') AND (a.CasteCode != '1203' AND a.CasteCode NOT LIKE '40%')
+GROUP BY 
+    CASE 
+        WHEN 
+            a.OwnerName LIKE '%,%' OR 
+            a.OwnerName LIKE '% र %' OR 
+            a.OwnerName LIKE '% अनि %' OR 
+            a.OwnerName LIKE '% तथा %' OR 
+            a.OwnerName LIKE '%/%' OR 
+            a.OwnerName LIKE '% संग %' OR 
+            a.OwnerName LIKE '% एवं %'
+        THEN 'Joint'
+        ELSE 'Single'
+    END;
+
+    13. query to view top 10 less plots = SELECT 
+    a.LocationCode,
+    d.LocationName,
+    COUNT(DISTINCT b.KhasraNumber) AS KhasraCount
+FROM 
+    lr_Khatiyan a
+INNER JOIN 
+    lr_Khasra b 
+    ON a.LocationCode = b.LocationCode AND a.KhatiyanNo = b.KhatiyanNo
+INNER JOIN 
+    c_lr_Location d 
+    ON a.LocationCode = d.LocationCode
+WHERE 
+    b.Mflag IS NULL OR b.Mflag = 'N'
+GROUP BY 
+    a.LocationCode, d.LocationName
+ORDER BY 
+    KhasraCount ASC
+OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY;
+
+
+14. excel formula single or joint =
+
+=IF(OR(
+   ISNUMBER(SEARCH("र",A2)),
+   ISNUMBER(SEARCH("अनि",A2)),
+   ISNUMBER(SEARCH("तथा",A2)),
+   ISNUMBER(SEARCH("/",A2)),
+   ISNUMBER(SEARCH("संग",A2)),
+   ISNUMBER(SEARCH("एवं",A2)),
+   ISNUMBER(SEARCH(",",A2))
+),"Joint","Single")
+
+
+15. query to check duplicate ror in the same block =
+SELECT 
+    a.KhatiyanNo, 
+    b.KhasraNumber, 
+    COUNT(*) as DuplicateCount
+FROM lr_Khatiyan a 
+INNER JOIN lr_Khasra b 
+    ON a.LocationCode = b.LocationCode AND a.KhatiyanNo = b.KhatiyanNo
+INNER JOIN c_lr_Location d 
+    ON a.LocationCode = d.LocationCode
+WHERE 
+    (b.Mflag IS NULL OR b.Mflag = 'N') AND a.LocationCode = '440104'
+GROUP BY 
+    a.KhatiyanNo, 
+    b.KhasraNumber
+HAVING 
+    COUNT(*) > 1;
+
