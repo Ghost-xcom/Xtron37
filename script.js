@@ -304,7 +304,7 @@ if (message.includes('white pc password') || message.includes('white computer pa
     return "🔐 White PC Password: 181993";
 }
 
-    if (message.includes('head office cpu password') || message.includes('head office cpu password')) {
+    if (message.includes('head office pc password') || message.includes('head office cpu password')) {
     return "🔐 White PC Password: 281376";
 }
        
@@ -411,4 +411,5 @@ if (message.includes('dilrmp_hathway wifi password') || message.includes('hathwa
 document.addEventListener('DOMContentLoaded', () => {
     new XtronChat();
 });
+
 
