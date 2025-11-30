@@ -17,10 +17,19 @@ class XtronChat {
                 "Single/Joint Ownership": "query to view single n joint",
                 "Single/Joint Count": "query to view single n joint as count",
                 "Top 10 Less Plots": "query to view top 10 less plots",
-                "Check Duplicate ROR": "query to check duplicate ror"
+                "Check Duplicate ROR": "query to check duplicate ror",
+                "Properties Between Years": "query to get number of property between years",
+    "Mutation Count": "query to get number of mutations",
+    "Registration Count": "query to get number of registration",
+    "Single Khasra Khatiyan": "query to get find all khatiyan that are linked to exactly one unique khasra",
+    "Gender-wise Plots": "query to get genderwise plots",
+    "Total Area": "query to get area"
             },
-            "Excel & Tools": {
-                "Excel Ownership Formula": "excel formula single or joint"
+            "Tools": {
+                "Excel Ownership Formula": "excel formula single or joint",
+                "Programmers WiFi": "programmers wifi password",
+    "Suntaley WiFi": "suntaley wifi password",
+    "Hathway WiFi": "dilrmp_hathway wifi password"
             }
         };
         
@@ -260,7 +269,64 @@ class XtronChat {
         if (message.includes('query to check duplicate ror') || message.includes('duplicate ror check')) {
             return "🔍 Query to Check Duplicate ROR in Same Block:\n\nSELECT \n    a.KhatiyanNo, \n    b.KhasraNumber, \n    COUNT(*) as DuplicateCount\nFROM lr_Khatiyan a \nINNER JOIN lr_Khasra b \n    ON a.LocationCode = b.LocationCode AND a.KhatiyanNo = b.KhatiyanNo\nINNER JOIN c_lr_Location d \n    ON a.LocationCode = d.LocationCode\nWHERE (b.Mflag IS NULL OR b.Mflag = 'N') AND a.LocationCode = '440104'\nGROUP BY a.KhatiyanNo, b.KhasraNumber\nHAVING COUNT(*) > 1;\n\nChange LocationCode as needed";
         }
-        
+
+        // ==================== PROPERTY & MUTATION QUERIES ====================
+if (message.includes('query to get number of property between years') || message.includes('property between years')) {
+    return "📊 Query for Properties Between Years:\n\nSELECT * FROM dbo.Application \nINNER JOIN dbo.pa_PropertyApplication ON dbo.Application.ApplicationNo=dbo.pa_PropertyApplication.ApplicationNo\nINNER JOIN dbo.pr_PropertyRegistration ON dbo.pa_PropertyApplication.PropertyApplicationNo= dbo.pr_PropertyRegistration.PropertyApplicationNo\nWHERE (YEAR(ApplicationDate) BETWEEN ('2023') AND ('2024')) AND (ApplicationStatusId='DE' OR ApplicationStatusId='RP' OR ApplicationStatusId='MA') \nAND pa_PropertyApplication.MutationTypeCode='2307';";
+}
+
+if (message.includes('query to get number of mutations') || message.includes('mutations count')) {
+    return "🔄 Query for Mutation Count:\n\nSELECT * FROM dbo.Application \nINNER JOIN dbo.pa_PropertyApplication ON dbo.Application.ApplicationNo=dbo.pa_PropertyApplication.ApplicationNo\nINNER JOIN dbo.pr_PropertyRegistration ON dbo.pa_PropertyApplication.PropertyApplicationNo= dbo.pr_PropertyRegistration.PropertyApplicationNo\nWHERE (YEAR(ApplicationDate) BETWEEN ('2023') AND ('2024')) AND (ApplicationStatusId != 'AX') AND (MutationTypeCode='0100' OR MutationTypeCode='0800' OR MutationTypeCode='2203' OR MutationTypeCode='2307');";
+}
+
+if (message.includes('query to get number of registration') || message.includes('registration count')) {
+    return "📝 Query for Registration Count:\n\nSELECT * FROM dbo.Application \nINNER JOIN dbo.pa_PropertyApplication ON dbo.Application.ApplicationNo=dbo.pa_PropertyApplication.ApplicationNo\nWHERE (YEAR(ApplicationDate) BETWEEN ('2023') AND ('2024')) AND (ApplicationStatusId='CA' OR ApplicationStatusId='RP') AND \n(MutationTypeCode='1038' OR MutationTypeCode='1039' OR MutationTypeCode='2104' OR MutationTypeCode='2108' OR MutationTypeCode='2112' OR MutationTypeCode='2103');";
+}
+
+if (message.includes('query to get find all khatiyan that are linked to exactly one unique khasra') || message.includes('single khasra khatiyan')) {
+    return "🔗 Query for Khatiyan with Single Khasra:\n\nSELECT \n  COUNT(DISTINCT k.khatiyan_no) AS single_khasra_khatiyan_count\nFROM \n  lr_khatiyan k\n  JOIN (\n    SELECT \n      khatiyan_no,\n      COUNT(DISTINCT khasra_no) AS khasra_count\n    FROM \n      lr_khasra\n    GROUP BY \n      khatiyan_no\n    HAVING \n      COUNT(DISTINCT khasra_no) = 1\n  ) kh ON k.khatiyan_no = kh.khatiyan_no;";
+}
+
+if (message.includes('query to get genderwise plots') || message.includes('genderwise plots')) {
+    return "👥 Query for Gender-wise Plots:\n\nSELECT \n    CASE \n        WHEN d.LocationCode LIKE '1%' THEN '1%'\n        WHEN d.LocationCode LIKE '2%' THEN '2%'\n        WHEN d.LocationCode LIKE '3%' THEN '3%'\n        WHEN d.LocationCode LIKE '4%' THEN '4%'\n        WHEN d.LocationCode LIKE '5%' THEN '5%'\n        WHEN d.LocationCode LIKE '6%' THEN '6%'\n        ELSE 'Other'\n    END AS location_start,\n    a.gender,\n    COUNT(DISTINCT a.KhatiyanNo) AS count\nFROM lr_Khatiyan a \nINNER JOIN lr_Khasra b \n    ON a.LocationCode = b.LocationCode AND a.KhatiyanNo = b.KhatiyanNo\nINNER JOIN c_lr_Location d \n    ON a.LocationCode = d.LocationCode\nWHERE (b.Mflag IS NULL OR b.Mflag = 'N') \nGROUP BY \n    CASE \n        WHEN d.LocationCode LIKE '1%' THEN '1%'\n        WHEN d.LocationCode LIKE '2%' THEN '2%'\n        WHEN d.LocationCode LIKE '3%' THEN '3%'\n        WHEN d.LocationCode LIKE '4%' THEN '4%'\n        WHEN d.LocationCode LIKE '5%' THEN '5%'\n        WHEN d.LocationCode LIKE '6%' THEN '6%'\n        ELSE 'Other'\n    END,\n    a.gender\nORDER BY location_start, a.gender;";
+}
+
+if (message.includes('query to get area') || message.includes('total area')) {
+    return "📐 Query for Total Area:\n\nSELECT SUM(TotArea) FROM dbo.lr_Khasra \nINNER JOIN dbo.lr_Khatiyan ON dbo.lr_Khasra.KhatiyanNo=dbo.lr_Khatiyan.KhatiyanNo;";
+}
+
+// ==================== PASSWORDS ====================
+if (message.includes('black pc password') || message.includes('black computer password')) {
+    return "🔐 Black PC Password: 1982";
+}
+
+if (message.includes('white pc password') || message.includes('white computer password')) {
+    return "🔐 White PC Password: 181993";
+}
+
+if (message.includes('office laptop password') || message.includes('laptop password')) {
+    return "🔐 Office Laptop Password: chung@tshering";
+}
+
+if (message.includes('dilrmp account password') || message.includes('dilrmp password')) {
+    return "🔐 DILRMP Account Password: revenueland@123";
+}
+
+if (message.includes('programmers wifi password') || message.includes('programmer wifi')) {
+    return "🔐 Programmers WiFi Password: dilrmpilrms@123";
+}
+
+if (message.includes('suntaley wifi password') || message.includes('suntaley wifi')) {
+    return "🔐 Suntaley WiFi Password: 11223344";
+}
+
+if (message.includes('dd mam pc password') || message.includes('dd mam password')) {
+    return "🔐 DD Mam PC Password: 2022";
+}
+
+if (message.includes('dilrmp_hathway wifi password') || message.includes('hathway wifi')) {
+    return "🔐 DILRMP Hathway WiFi Password: $0725Dilrmp";
+}
         // ==================== DEFAULT RESPONSES ====================
         if (message.includes('hello') || message.includes('hi') || message.includes('hey')) {
             return "Hello there! 👋 I'm Xtron, your personal assistant. How can I help you today?";
