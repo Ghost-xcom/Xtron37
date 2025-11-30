@@ -304,6 +304,14 @@ if (message.includes('white pc password') || message.includes('white computer pa
     return "🔐 White PC Password: 181993";
 }
 
+    if (message.includes('head office cpu password') || message.includes('head office cpu password')) {
+    return "🔐 White PC Password: 281376";
+}
+       
+        if (message.includes('head office wifi password') || message.includes('head office wifi password')) {
+    return "🔐 Wifi: 281376 \n Password: LRDMD2025";
+}
+
 if (message.includes('office laptop password') || message.includes('laptop password')) {
     return "🔐 Office Laptop Password: chung@tshering";
 }
@@ -403,3 +411,4 @@ if (message.includes('dilrmp_hathway wifi password') || message.includes('hathwa
 document.addEventListener('DOMContentLoaded', () => {
     new XtronChat();
 });
+
