@@ -305,11 +305,11 @@ if (message.includes('white pc password') || message.includes('white computer pa
 }
 
     if (message.includes('head office pc password') || message.includes('head office cpu password')) {
-    return "🔐 White PC Password: 281376";
+    return "🔐 Projector PC Password: 281376";
 }
        
         if (message.includes('head office wifi password') || message.includes('head office wifi password')) {
-    return "🔐 Wifi: 281376 \n Password: LRDMD2025";
+    return "🔐 Wifi: MEETING@2025 \n Password: LRDMD2025";
 }
 
 if (message.includes('office laptop password') || message.includes('laptop password')) {
@@ -411,5 +411,6 @@ if (message.includes('dilrmp_hathway wifi password') || message.includes('hathwa
 document.addEventListener('DOMContentLoaded', () => {
     new XtronChat();
 });
+
 
 
