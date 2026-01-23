@@ -23,13 +23,15 @@ class XtronChat {
     "Registration Count": "query to get number of registration",
     "Single Khasra Khatiyan": "query to get find all khatiyan that are linked to exactly one unique khasra",
     "Gender-wise Plots": "query to get genderwise plots",
-    "Total Area": "query to get area"
+    "Total Area": "query to get area",
+                "DCS relevant query": "query to get dec relevant data"
             },
             "Tools": {
                 "Excel Ownership Formula": "excel formula single or joint",
                 "Programmers WiFi": "programmers wifi password",
     "Suntaley WiFi": "suntaley wifi password",
-    "Hathway WiFi": "dilrmp_hathway wifi password"
+    "Hathway WiFi": "dilrmp_hathway wifi password",
+                "Excel Number of Owners": "excel formula for number of owners"
             }
         };
         
@@ -208,35 +210,58 @@ class XtronChat {
     getBotResponse(userMessage) {
         const message = userMessage.toLowerCase().trim();
         
-        // ==================== BHUNAKSA LOGIN CREDENTIALS ====================
-        if (message.includes('bhunaksa login for gangtok') || message.includes('gangtok login')) {
-            return "🔐 Gangtok Bhunaksa Login:\n• Username: rs_gtk\n• Password: rs@gtk";
+        // ==================== bhunaksha LOGIN CREDENTIALS ====================
+        if (message.includes('bhunaksha login for gangtok') || message.includes('gangtok login')) {
+            return "🔐 Gangtok bhunaksha Login:\n• Username: rs_gtk\n• Password: rs@gtk";
         }
         
-        if (message.includes('bhunaksa login for gyalshing') || message.includes('gyalshing login')) {
-            return "🔐 Gyalshing Bhunaksa Login:\n• Username: rs_gey\n• Password: rs@gey";
+        if (message.includes('bhunaksha login for gyalshing') || message.includes('gyalshing login')) {
+            return "🔐 Gyalshing bhunaksha Login:\n• Username: rs_gey\n• Password: rs@gey";
         }
         
-        if (message.includes('bhunaksa login for namchi') || message.includes('namchi login')) {
-            return "🔐 Namchi Bhunaksa Login:\n• Username: rs_namchi\n• Password: rs@namchi";
+        if (message.includes('bhunaksha login for namchi') || message.includes('namchi login')) {
+            return "🔐 Namchi bhunaksha Login:\n• Username: rs_namchi\n• Password: rs@namchi";
         }
         
-        if (message.includes('bhunaksa login for mangan') || message.includes('mangan login')) {
-            return "🔐 Mangan Bhunaksa Login:\n• Username: rs_mangan\n• Password: rs@mangan";
+        if (message.includes('bhunaksha login for mangan') || message.includes('mangan login')) {
+            return "🔐 Mangan bhunaksha Login:\n• Username: rs_mangan\n• Password: rs@mangan";
         }
         
-        if (message.includes('bhunaksa login for pakyong') || message.includes('pakyong login')) {
-            return "🔐 Pakyong Bhunaksa Login:\n• Username: rs_paky\n• Password: rs@paky";
+        if (message.includes('bhunaksha login for pakyong') || message.includes('pakyong login')) {
+            return "🔐 Pakyong bhunaksha Login:\n• Username: rs_paky\n• Password: rs@paky";
         }
         
-        if (message.includes('bhunaksa login for soreng') || message.includes('soreng login')) {
-            return "🔐 Soreng Bhunaksa Login:\n• Username: rs_soreng\n• Password: rs@soreng";
+        if (message.includes('bhunaksha login for soreng') || message.includes('soreng login')) {
+            return "🔐 Soreng bhunaksha Login:\n• Username: rs_soreng\n• Password: rs@soreng";
+        }
+
+        if (message.includes('SDC Server details') || message.includes('SDC')) {
+            return "🔐 Sdc server internal ip 10.182.95.136:\n• public ip : 164.100.126.44\n• Username: WEB-9/SSDC \N password:$$web@12345$#";
+        }
+
+       if (message.includes('api') || message.includes('Api')) {
+            return "🔐 Basic Api link for farmer registry: http://164.100.126.44/api/farmer \n• Basic Api link for GRVMR: http://164.100.126.44/api/grvmr;
         }
         
         // ==================== DATABASE QUERIES ====================
         if (message.includes('query for number of ror') || message.includes('ror count') || message.includes('total ror')) {
             return "📊 Query for Number of ROR:\n\nSELECT count(distinct a.KhatiyanNo), d.LocationName\nFROM lr_Khatiyan as a \nINNER JOIN lr_Khasra as b ON a.LocationCode=b.LocationCode AND a.KhatiyanNo=b.KhatiyanNo\nINNER JOIN c_lr_Location as d ON a.LocationCode=d.LocationCode\nWHERE (b.Mflag is null or b.mflag='N')\nGROUP BY d.LocationName";
         }
+
+
+        if (message.includes('DCS relevant query') || message.includes('DCS')) {
+            return "📊 Query for DCS DATA Extraction \n\nSELECT
+    a.OwnerName, a.FathersName, a.KhatiyanNo, b.KhasraNumber, b.TotArea
+FROM lr_Khatiyan a 
+INNER JOIN lr_Khasra b 
+    ON a.LocationCode = b.LocationCode AND a.KhatiyanNo = b.KhatiyanNo
+INNER JOIN c_lr_Location d 
+    ON a.LocationCode = d.LocationCode
+WHERE (b.Mflag IS NULL OR b.Mflag = 'N') and a.LocationCode in
+;"
+        }
+
+        
         
         if (message.includes('query for number of plots') || message.includes('plot count') || message.includes('total plots')) {
             return "📈 Query for Number of Plots:\n\nSELECT \n    d.LocationName,\n    COUNT(DISTINCT b.KhasraNumber) AS TotalPlots\nFROM lr_Khatiyan a\nINNER JOIN lr_Khasra b \n    ON a.LocationCode = b.LocationCode \n    AND a.KhatiyanNo = b.KhatiyanNo\nINNER JOIN c_lr_Location d\n    ON a.LocationCode = d.LocationCode\nWHERE (b.Mflag IS NULL OR b.Mflag = 'N')\nGROUP BY d.LocationName\nORDER BY d.LocationName;";
@@ -265,8 +290,11 @@ class XtronChat {
         if (message.includes('excel formula single or joint') || message.includes('excel ownership formula')) {
             return "📝 Excel Formula for Single/Joint:\n\n=IF(OR(\n   ISNUMBER(SEARCH(\"र\",A2)),\n   ISNUMBER(SEARCH(\"अनि\",A2)),\n   ISNUMBER(SEARCH(\"तथा\",A2)),\n   ISNUMBER(SEARCH(\"/\",A2)),\n   ISNUMBER(SEARCH(\"संग\",A2)),\n   ISNUMBER(SEARCH(\"एवं\",A2)),\n   ISNUMBER(SEARCH(\",\",A2))\n),\"Joint\",\"Single\")\n\nUse this formula in Excel to determine ownership type";
         }
+        if (message.includes('excel formula single or joint') || message.includes('excel ownership formula')) {
+            return "📝 Excel Formula for Single/Joint:\n\n=IF(OR(\n   ISNUMBER(SEARCH(\"र\",A2)),\n   ISNUMBER(SEARCH(\"अनि\",A2)),\n   ISNUMBER(SEARCH(\"तथा\",A2)),\n   ISNUMBER(SEARCH(\"/\",A2)),\n   ISNUMBER(SEARCH(\"संग\",A2)),\n   ISNUMBER(SEARCH(\"एवं\",A2)),\n   ISNUMBER(SEARCH(\",\",A2))\n),\"Joint\",\"Single\")\n\nUse this formula in Excel to determine ownership type";
+        }
         
-        if (message.includes('query to check duplicate ror') || message.includes('duplicate ror check')) {
+        if (message.includes('excel formula for number of owners') || message.includes('Excel Number of Owners')) {
             return "🔍 Query to Check Duplicate ROR in Same Block:\n\nSELECT \n    a.KhatiyanNo, \n    b.KhasraNumber, \n    COUNT(*) as DuplicateCount\nFROM lr_Khatiyan a \nINNER JOIN lr_Khasra b \n    ON a.LocationCode = b.LocationCode AND a.KhatiyanNo = b.KhatiyanNo\nINNER JOIN c_lr_Location d \n    ON a.LocationCode = d.LocationCode\nWHERE (b.Mflag IS NULL OR b.Mflag = 'N') AND a.LocationCode = '440104'\nGROUP BY a.KhatiyanNo, b.KhasraNumber\nHAVING COUNT(*) > 1;\n\nChange LocationCode as needed";
         }
 
@@ -341,7 +369,7 @@ if (message.includes('dilrmp_hathway wifi password') || message.includes('hathwa
         }
         
         if (message.includes('help')) {
-            return "I can help you with various tasks! Try asking me about:\n• Bhunaksa login credentials\n• Database queries for land records\n• Excel formulas\n• Or use the 'Quick Prompts' dropdown for common questions!";
+            return "I can help you with various tasks! Try asking me about:\n• bhunaksha login credentials\n• Database queries for land records\n• Excel formulas\n• Or use the 'Quick Prompts' dropdown for common questions!";
         }
         
         if (message.includes('how are you')) {
@@ -361,7 +389,7 @@ if (message.includes('dilrmp_hathway wifi password') || message.includes('hathwa
         }
         
         if (message.includes('what can you do') || message.includes('features')) {
-            return "Here's what I can do:\n• Provide Bhunaksa login credentials\n• Share database queries for land records\n• Give Excel formulas\n• Answer general questions\n• And much more!";
+            return "Here's what I can do:\n• Provide bhunaksha login credentials\n• Share database queries for land records\n• Give Excel formulas\n• Answer general questions\n• And much more!";
         }
         
         if (message.includes('bye') || message.includes('goodbye')) {
@@ -411,6 +439,7 @@ if (message.includes('dilrmp_hathway wifi password') || message.includes('hathwa
 document.addEventListener('DOMContentLoaded', () => {
     new XtronChat();
 });
+
 
 
 
