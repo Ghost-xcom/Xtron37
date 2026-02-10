@@ -24,6 +24,7 @@ class XtronChat {
                 "Gender-wise Plots": "query to get genderwise plots",
                 "Total Area": "query to get area",
                 "DCS relevant query": "query to get dec relevant data"
+               
             },
             "Tools": {
                 "Excel Ownership Formula": "excel formula single or joint",
@@ -31,6 +32,7 @@ class XtronChat {
                 "Suntaley WiFi": "suntaley wifi password",
                 "Hathway WiFi": "dilrmp_hathway wifi password",
                 "Excel Number of Owners": "excel formula for number of owners"
+                 "gatishakti"
             }
         };
         
@@ -288,6 +290,10 @@ WHERE (b.Mflag IS NULL OR b.Mflag = 'N') AND a.LocationCode IN (...);`;
             return "🔍 Query to Check Duplicate ROR in Same Block:\n\nSELECT \n    a.KhatiyanNo, \n    b.KhasraNumber, \n    COUNT(*) as DuplicateCount\nFROM lr_Khatiyan a \nINNER JOIN lr_Khasra b \n    ON a.LocationCode = b.LocationCode AND a.KhatiyanNo = b.KhatiyanNo\nINNER JOIN c_lr_Location d \n    ON a.LocationCode = d.LocationCode\nWHERE (b.Mflag IS NULL OR b.Mflag = 'N') AND a.LocationCode = '440104'\nGROUP BY a.KhatiyanNo, b.KhasraNumber\nHAVING COUNT(*) > 1;\n\n*Change LocationCode as needed*";
         }
 
+         if (message.includes('Gatishakti') || message.includes('gatishakti') || message.includes('Janparichey') || message.includes('janparichay')) {
+            return "Mail check in : mail.gov.in \n email account : yash.gurung02@sikkim.gov.in \n email and janparichay password : Dilrmp@2915";
+        }
+
         // ==================== EXCEL FORMULAS ====================
         if (message.includes('excel formula single or joint') || message.includes('excel ownership formula')) {
             return `📝 Excel Formula for Single/Joint:
@@ -455,3 +461,4 @@ WHERE (b.Mflag IS NULL OR b.Mflag = 'N') AND a.LocationCode IN (...);`;
 document.addEventListener('DOMContentLoaded', () => {
     new XtronChat();
 });
+
