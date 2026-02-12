@@ -32,26 +32,8 @@ class XtronChat {
                 "Hathway WiFi": "dilrmp_hathway wifi password",
                 "Excel Number of Owners": "excel formula for number of owners",
                 "Gatishakti": "gatishakti"
-            },
-            "Login Credentials": {
-                "Gangtok Bhunaksha": "gangtok login",
-                "Gyalshing Bhunaksha": "gyalshing login",
-                "Namchi Bhunaksha": "namchi login",
-                "Mangan Bhunaksha": "mangan login",
-                "Pakyong Bhunaksha": "pakyong login",
-                "Soreng Bhunaksha": "soreng login",
-                "SDC Server": "sdc server details",
-                "API Links": "api farmer registry"
-            },
-            "Passwords": {
-                "Black PC": "black pc password",
-                "White PC": "white pc password",
-                "Head Office PC": "head office pc password",
-                "Head Office WiFi": "head office wifi password",
-                "Office Laptop": "office laptop password",
-                "DILRMP Account": "dilrmp account password",
-                "DD Mam PC": "dd mam pc password"
             }
+            
         };
         
         this.init();
@@ -353,6 +335,11 @@ class XtronChat {
             return "📐 **Query for Total Area:**\n\n```sql\nSELECT SUM(TotArea) FROM dbo.lr_Khasra \nINNER JOIN dbo.lr_Khatiyan ON dbo.lr_Khasra.KhatiyanNo=dbo.lr_Khatiyan.KhatiyanNo;\n```";
         }
 
+       if (message.includes('sdc')) {
+           return "🔐 **SDC Server Details:**\n\n• Node Internal IP: `10.182.95.136`\n• Node External IP: `164.100.126.44`\n• Server Name: `WEB-9/SSDC`\n• Server Password: `$$web9@12345$#`";
+        }
+       
+        
         // ==================== PASSWORDS ====================
         if (message.includes('black') && (message.includes('pc') || message.includes('computer'))) {
             return "🔐 Black PC Password: **1982**";
@@ -460,3 +447,4 @@ class XtronChat {
 document.addEventListener('DOMContentLoaded', () => {
     new XtronChat();
 });
+
