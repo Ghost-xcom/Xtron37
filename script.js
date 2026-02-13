@@ -252,10 +252,6 @@ class XtronChat {
             return "🔐 Soreng Bhunaksha Login:\n• Username: rs_soreng\n• Password: rs@soreng";
         }
 
-        if (message.includes('sdc') && (message.includes('server') || message.includes('details'))) {
-            return "🔐 SDC Server Details:\n• Internal IP: 10.182.95.136\n• Public IP: 164.100.126.44\n• Username: WEB-9/SSDC\n• Password: $$web@12345$#";
-        }
-
         if ((message.includes('api') || message.includes('farmer registry')) && !message.includes('query')) {
             return "🔐 API Links:\n• Farmer Registry: http://164.100.126.44/api/farmer\n• GRVMR: http://164.100.126.44/api/grvmr";
         }
@@ -447,6 +443,7 @@ class XtronChat {
 document.addEventListener('DOMContentLoaded', () => {
     new XtronChat();
 });
+
 
 
 
