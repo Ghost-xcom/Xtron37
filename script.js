@@ -335,9 +335,9 @@ class XtronChat {
             return "📐 **Query for Total Area:**\n\n```sql\nSELECT SUM(TotArea) FROM dbo.lr_Khasra \nINNER JOIN dbo.lr_Khatiyan ON dbo.lr_Khasra.KhatiyanNo=dbo.lr_Khatiyan.KhatiyanNo;\n```";
         }
 
-       if (message.includes('sdc') || (message.includes('SDC') || (message.includes('Sdc') ) {
-           return "🔐 **SDC Server Details:**\n\n• Node Internal IP: `10.182.95.136`\n• Node External IP: `164.100.126.44`\n• Server Name: `WEB-9/SSDC`\n• Server Password: `$$web9@12345$#`";
-        }
+       if (message.includes('sdc')) {
+    return "🔐 **SDC Server Details:**\n\n• Node Internal IP: `10.182.95.136`\n• Node External IP: `164.100.126.44`\n• Server Name: `WEB-9/SSDC`\n• Server Password: `$$web9@12345$#`";
+           }
        
         
         // ==================== PASSWORDS ====================
@@ -447,5 +447,6 @@ class XtronChat {
 document.addEventListener('DOMContentLoaded', () => {
     new XtronChat();
 });
+
 
 
