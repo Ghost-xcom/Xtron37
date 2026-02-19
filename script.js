@@ -349,8 +349,12 @@ class XtronChat {
             return "🔐 Head Office/Projector PC Password: **281376**";
         }
         
-        if (message.includes('head office') && message.includes('wifi')) {
+        if (message.includes('head office') || message.includes('Headoffice') || message.includes('headoffice') ) {
             return "🔐 Head Office WiFi:\n• SSID: MEETING@2025\n• Password: LRDMD2025";
+        }
+
+         if (message.includes('Dilrmp Facebook') || message.includes('facebook') || message.includes('Facebook') ) {
+            return "🔐 Unsername:\n• dilrmpsikkim@gmail.com \n• Password: Dilrmp@123";
         }
 
         if (message.includes('office laptop') || (message.includes('laptop') && message.includes('password'))) {
@@ -443,6 +447,7 @@ class XtronChat {
 document.addEventListener('DOMContentLoaded', () => {
     new XtronChat();
 });
+
 
 
 
