@@ -18,11 +18,11 @@ class XtronChat {
                 "Top 10 Less Plots": "query to view top 10 less plots",
                 "Check Duplicate ROR": "query to check duplicate ror",
                 "Properties Between Years": "query to get number of property between years",
-                "Mutation Count": "query to get number of mutations",
-                "Registration Count": "query to get number of registration",
+                "Mutation Count": "Query for Mutation Count",
+                "Registration Count": "Query for Registration Count",
                 "Single Khasra Khatiyan": "query to get find all khatiyan that are linked to exactly one unique khasra",
                 "Gender-wise Plots": "query to get genderwise plots",
-                "Total Area": "query to get area",
+                "Total Area": "Query for Total Area",
                 "DCS relevant query": "query to get dec relevant data"
             },
             "Tools": {
@@ -445,3 +445,4 @@ class XtronChat {
 document.addEventListener('DOMContentLoaded', () => {
     new XtronChat();
 });
+
