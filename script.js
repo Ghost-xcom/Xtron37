@@ -33,7 +33,6 @@ class XtronChat {
                 "Excel Number of Owners": "excel formula for number of owners",
                 "Gatishakti": "gatishakti"
             }
-            
         };
         
         this.init();
@@ -331,10 +330,9 @@ class XtronChat {
             return "📐 **Query for Total Area:**\n\n```sql\nSELECT SUM(TotArea) FROM dbo.lr_Khasra \nINNER JOIN dbo.lr_Khatiyan ON dbo.lr_Khasra.KhatiyanNo=dbo.lr_Khatiyan.KhatiyanNo;\n```";
         }
 
-       if (message.includes('sdc')) {
-    return "🔐 **SDC Server Details:**\n\n• Node Internal IP: `10.182.95.136`\n• Node External IP: `164.100.126.44`\n• Server Name: `WEB-9/SSDC`\n• Server Password: `$$web9@12345$#`";
-           }
-       
+        if (message.includes('sdc')) {
+            return "🔐 **SDC Server Details:**\n\n• Node Internal IP: `10.182.95.136`\n• Node External IP: `164.100.126.44`\n• Server Name: `WEB-9/SSDC`\n• Server Password: `$$web9@12345$#`";
+        }
         
         // ==================== PASSWORDS ====================
         if (message.includes('black') && (message.includes('pc') || message.includes('computer'))) {
@@ -349,12 +347,12 @@ class XtronChat {
             return "🔐 Head Office/Projector PC Password: **281376**";
         }
         
-        if (message.includes('head office') || message.includes('Headoffice') || message.includes('headoffice') ) {
+        if (message.includes('head office') || message.includes('headoffice') || message.includes('Headoffice')) {
             return "🔐 Head Office WiFi:\n• SSID: MEETING@2025\n• Password: LRDMD2025";
         }
 
-         if (message.includes('Dilrmp Facebook') || message.includes('facebook') || message.includes('Facebook') ) {
-            return "🔐 Unsername:\n• dilrmpsikkim@gmail.com \n• Password: Dilrmp@123";
+        if (message.includes('dilrmp facebook') || message.includes('facebook') || message.includes('Facebook')) {
+            return "🔐 **DILRMP Facebook Login:**\n\n• Username: dilrmpsikkim@gmail.com\n• Password: Dilrmp@123";
         }
 
         if (message.includes('office laptop') || (message.includes('laptop') && message.includes('password'))) {
@@ -387,7 +385,7 @@ class XtronChat {
         }
         
         if (message.includes('help') || message.includes('what can you do')) {
-            return "🤖 **I can help you with:**\n\n• 🔐 Bhunaksha login credentials\n• 📊 Database queries for land records\n• 📝 Excel formulas\n• 🔑 Office passwords\n• 📧 Gatishakti/Janparichay info\n• 📋 SDC server details\n\n*Try using the 'Quick Prompts' dropdown for common questions!*";
+            return "🤖 **I can help you with:**\n\n• 🔐 Bhunaksha login credentials\n• 📊 Database queries for land records\n• 📝 Excel formulas\n• 🔑 Office passwords\n• 📧 Gatishakti/Janparichay info\n• 📋 SDC server details\n• 📈 Mutation & Registration counts\n• 📐 Total area calculations\n\n*Try using the 'Quick Prompts' dropdown for common questions!*";
         }
         
         if (message.includes('how are you')) {
@@ -407,7 +405,7 @@ class XtronChat {
         }
         
         if (message.includes('features') || message.includes('capabilities')) {
-            return "🚀 **Xtron Features:**\n\n• Quick access to database queries\n• Office credentials management\n• Excel formula generator\n• Property records information\n• Mutation & registration statistics\n• And much more!";
+            return "🚀 **Xtron Features:**\n\n• Quick access to database queries\n• Office credentials management\n• Excel formula generator\n• Property records information\n• Mutation & registration statistics\n• Total area calculations\n• And much more!";
         }
         
         if (message.includes('bye') || message.includes('goodbye')) {
@@ -419,7 +417,7 @@ class XtronChat {
         }
         
         // Default response if no match found
-        return "I'm not sure about that. 🤔 Try using the **Quick Prompts** dropdown or ask me about:\n\n• Database queries\n• Login credentials\n• Passwords\n• Excel formulas\n• Gatishakti/Janparichay";
+        return "I'm not sure about that. 🤔 Try using the **Quick Prompts** dropdown or ask me about:\n\n• Database queries\n• Login credentials\n• Passwords\n• Excel formulas\n• Gatishakti/Janparichay\n• Mutation counts\n• Registration counts\n• Total area";
     }
     
     showWelcomeMessage() {
@@ -447,8 +445,3 @@ class XtronChat {
 document.addEventListener('DOMContentLoaded', () => {
     new XtronChat();
 });
-
-
-
-
-
