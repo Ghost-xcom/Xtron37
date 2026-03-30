@@ -335,6 +335,11 @@ class XtronChat {
         }
         
         // ==================== PASSWORDS ====================
+
+        if (message.includes('ilrms credential') || message.includes('ilrms password'))) {
+            return "🔐 Username: dilrmp-admin \n Password: Pass@123$";
+        }
+        
         if (message.includes('black') && (message.includes('pc') || message.includes('computer'))) {
             return "🔐 Black PC Password: **1982**";
         }
