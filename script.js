@@ -364,7 +364,7 @@ class XtronChat {
             return "🔐 Office Laptop Password: **chung@tshering**";
         }
 
-        if (message.includes('dilrmp account') || (message.includes('dilrmp') && message.includes('password'))) {
+        if (message.includes('dilrmp gmail account') ) {
             return "🔐 DILRMP Account Password: **revenueland@123**";
         }
 
