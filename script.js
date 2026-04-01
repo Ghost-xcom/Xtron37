@@ -369,7 +369,7 @@ class XtronChat {
         }
 
         if (message.includes('programmers') || message.includes('programmer wifi')) {
-            return "🔐 Programmers WiFi Password: **dilrmpilrms@123**";
+            return "🔐 Programmers WiFi Password: **ilrms@2026**";
         }
 
         if (message.includes('suntaley')) {
