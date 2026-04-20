@@ -312,6 +312,71 @@ if (message.includes('non mutated plots') || message.includes('non-mutated plots
            "• Use the extracted coordinates for mapping or further analysis";
 }
 
+
+// ==================== NON MUTATED VERIFICATION ====================
+if (message.includes('non mutated verification') || message.includes('non-mutated verification') || message.includes('verify non mutated')) {
+    return "🔍 **Non Mutated Verification Process:**\n\n" +
+           "**Step 1: Extract DCS Relevant Data**\n" +
+           "```sql\n" +
+           "SELECT\n" +
+           "    a.OwnerName, a.FathersName, a.KhatiyanNo, b.KhasraNumber, b.TotArea\n" +
+           "FROM lr_Khatiyan a \n" +
+           "INNER JOIN lr_Khasra b \n" +
+           "    ON a.LocationCode = b.LocationCode AND a.KhatiyanNo = b.KhatiyanNo\n" +
+           "INNER JOIN c_lr_Location d \n" +
+           "    ON a.LocationCode = d.LocationCode\n" +
+           "WHERE (b.Mflag IS NULL OR b.Mflag = 'N') \n" +
+           "    AND a.LocationCode IN ('440101', '440102'); /* Replace with your block codes */\n" +
+           "```\n\n" +
+           "**Step 2: Filter and Extract Plot Numbers with '/'**\n" +
+           "```\n" +
+           "1. From the extracted data, filter KhasraNumber column\n" +
+           "2. Keep only records where KhasraNumber contains '/'\n" +
+           "3. Copy these plot numbers to a new column/sheet\n" +
+           "```\n\n" +
+           "**Step 3: Extract Plot Number Before '/' Using Excel Formula**\n" +
+           "```excel\n" +
+           "=LEFT(A1, FIND(\"/\", A1) - 1)\n" +
+           "```\n" +
+           "*Where A1 contains the KhasraNumber with '/' (e.g., '123/456' becomes '123')*\n\n" +
+           "**Step 4: Copy Column to Non Mutated Records**\n" +
+           "```\n" +
+           "1. Copy the extracted numbers from Step 3\n" +
+           "2. Paste them into a new column next to your non-mutated records\n" +
+           "3. Ensure both datasets are in the same worksheet for comparison\n" +
+           "```\n\n" +
+           "**Step 5: Find Common Entries Between Both Datasets**\n" +
+           "```excel\n" +
+           "=IF(COUNTIF(B:B, A2)>0, \"Common\", \"Unique\")\n" +
+           "```\n" +
+           "*Where:\n" +
+           "   - Column A contains non-mutated plot numbers\n" +
+           "   - Column B contains extracted plot numbers from Step 3\n" +
+           "   - 'Common' = Plot number exists in both datasets\n" +
+           "   - 'Unique' = Plot number only in non-mutated records*\n\n" +
+           "**Step 6: Verification Rule**\n" +
+           "```\n" +
+           "✅ ALL MUST BE UNIQUE\n" +
+           "\n" +
+           "Expected Result:\n" +
+           "• Every non-mutated plot number should show 'Unique'\n" +
+           "• If any shows 'Common', that plot has been mutated and shouldn't be in non-mutated list\n" +
+           "• This confirms your non-mutated records are correctly identified\n" +
+           "```\n\n" +
+           "**📋 Quick Excel Setup Guide:**\n" +
+           "| Column A (Non-Mutated) | Column B (From Step 3) | Column C (Verification) |\n" +
+           "|------------------------|------------------------|-------------------------|\n" +
+           "| 123 | 45 | =IF(COUNTIF(B:B, A2)>0, \"Common\", \"Unique\") |\n" +
+           "| 456 | 67 | =IF(COUNTIF(B:B, A3)>0, \"Common\", \"Unique\") |\n" +
+           "| 789 | 89 | =IF(COUNTIF(B:B, A4)>0, \"Common\", \"Unique\") |\n\n" +
+           "**⚠️ Important:**\n" +
+           "• All non-mutated plot numbers should return 'Unique'\n" +
+           "• If any return 'Common', those plots have been mutated and need to be removed from non-mutated list\n" +
+           "• This ensures data integrity between mutated and non-mutated records";
+}
+
+
+        
         if (message.includes('dcs') || (message.includes('dec') && message.includes('relevant'))) {
             return "📊 **Query for DCS Data Extraction:**\n\n```sql\nSELECT\n    a.OwnerName, a.FathersName, a.KhatiyanNo, b.KhasraNumber, b.TotArea\nFROM lr_Khatiyan a \nINNER JOIN lr_Khasra b \n    ON a.LocationCode = b.LocationCode AND a.KhatiyanNo = b.KhatiyanNo\nINNER JOIN c_lr_Location d \n    ON a.LocationCode = d.LocationCode\nWHERE (b.Mflag IS NULL OR b.Mflag = 'N') AND a.LocationCode IN (...);\n```";
         }
