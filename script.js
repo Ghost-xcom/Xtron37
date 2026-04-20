@@ -260,6 +260,58 @@ class XtronChat {
             return "📊 **Query for Number of ROR:**\n\n```sql\nSELECT count(distinct a.KhatiyanNo), d.LocationName\nFROM lr_Khatiyan as a \nINNER JOIN lr_Khasra as b ON a.LocationCode=b.LocationCode AND a.KhatiyanNo=b.KhatiyanNo\nINNER JOIN c_lr_Location as d ON a.LocationCode=d.LocationCode\nWHERE (b.Mflag is null or b.mflag='N')\nGROUP BY d.LocationName;\n```";
         }
 
+        // ==================== NON MUTATED PLOTS ====================
+if (message.includes('non mutated plots') || message.includes('non-mutated plots') || message.includes('non mutated')) {
+    return "📊 **Non Mutated Plots Extraction Guide:**\n\n" +
+           "**Step 1: Extract Non Mutated Plot Numbers**\n" +
+           "```sql\n" +
+           "SELECT\n" +
+           "    a.OwnerName, a.FathersName, a.KhatiyanNo, b.KhasraNumber, b.TotArea\n" +
+           "FROM lr_Khatiyan a \n" +
+           "INNER JOIN lr_Khasra b \n" +
+           "    ON a.LocationCode = b.LocationCode AND a.KhatiyanNo = b.KhatiyanNo\n" +
+           "INNER JOIN c_lr_Location d \n" +
+           "    ON a.LocationCode = d.LocationCode\n" +
+           "WHERE (b.Mflag IS NULL OR b.Mflag = 'N') \n" +
+           "    AND a.LocationCode IN ('440101', '440102') /* Replace with your block codes */\n" +
+           "    AND b.KhasraNumber NOT LIKE '%/%'\n" +
+           "    AND b.KhasraNumber NOT IN (\n" +
+           "        SELECT DISTINCT \n" +
+           "            LEFT(k.KhasraNumber, CHARINDEX('/', k.KhasraNumber) - 1)\n" +
+           "        FROM lr_Khasra k\n" +
+           "        WHERE k.LocationCode IN ('440101', '440102') /* Replace with your block codes */\n" +
+           "            AND k.KhasraNumber LIKE '%/%'\n" +
+           "    );\n" +
+           "```\n\n" +
+           "**Step 2: Extract Coordinates from Shapefile**\n" +
+           "```\n" +
+           "1. Open the shapefile for the same block in QGIS/ArcGIS\n" +
+           "2. Use the plot numbers from Step 1 as a filter\n" +
+           "3. Export the selected features with their geometry\n" +
+           "4. Extract coordinates (X,Y or Lat/Long) from the geometry\n" +
+           "```\n\n" +
+           "**Step 3: Map Plot Numbers with Coordinates**\n" +
+           "```sql\n" +
+           "-- Create a mapping table or use Excel to join:\n" +
+           "-- | KhasraNumber | OwnerName | TotArea | X_Coord | Y_Coord |\n" +
+           "-- \n" +
+           "-- For SQL Server with spatial data:\n" +
+           "SELECT \n" +
+           "    plots.KhasraNumber,\n" +
+           "    plots.OwnerName,\n" +
+           "    plots.TotArea,\n" +
+           "    shape.ShapeGeometry.STX as Longitude,\n" +
+           "    shape.ShapeGeometry.STY as Latitude\n" +
+           "FROM extracted_plots plots\n" +
+           "INNER JOIN block_shapefile shape\n" +
+           "    ON plots.KhasraNumber = shape.KhasraNumber;\n" +
+           "```\n\n" +
+           "**💡 Pro Tips:**\n" +
+           "• Replace `'440101', '440102'` with your actual block LocationCode(s)\n" +
+           "• The query excludes mutated plots (those with '/' in KhasraNumber)\n" +
+           "• Use the extracted coordinates for mapping or further analysis";
+}
+
         if (message.includes('dcs') || (message.includes('dec') && message.includes('relevant'))) {
             return "📊 **Query for DCS Data Extraction:**\n\n```sql\nSELECT\n    a.OwnerName, a.FathersName, a.KhatiyanNo, b.KhasraNumber, b.TotArea\nFROM lr_Khatiyan a \nINNER JOIN lr_Khasra b \n    ON a.LocationCode = b.LocationCode AND a.KhatiyanNo = b.KhatiyanNo\nINNER JOIN c_lr_Location d \n    ON a.LocationCode = d.LocationCode\nWHERE (b.Mflag IS NULL OR b.Mflag = 'N') AND a.LocationCode IN (...);\n```";
         }
