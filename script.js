@@ -11,6 +11,7 @@ class XtronChat {
             "Database Queries": {
                 "Number of ROR": "query for number of ror",
                 "Number of Plots": "query for number of plots", 
+                "Govt Lands": "query for Govt Lands", 
                 "View Records": "query to view records",
                 "Records with LGD": "query to view records with lgd code",
                 "Single/Joint Ownership": "query to view single n joint",
@@ -375,6 +376,11 @@ if (message.includes('non mutated verification') || message.includes('non-mutate
            "• This ensures data integrity between mutated and non-mutated records";
 }
 
+
+        // ==================== GOVT LANDS QUERY ====================
+if (message.includes('govt lands') || message.includes('government lands') || message.includes('govt land query')) {
+    return "🏛️ **Government Lands Acquisition Query:**\n\n```sql\nSELECT  \n    PO.OrganizationName AS Buyer,\n    PP.CasteCode,\n    LA.PurposeofAcquisition,\n    PPA.MutationDate,\n    LCD.ChequeAmount,\n    LCD.ChequeNumber,\n    PR.ConsiderationValue AS SaleValue\nFROM la_Land_Acquisition LA\nLEFT JOIN pa_PropertyApplication PPA\n    ON LA.PropertyApplicationNo = PPA.PropertyApplicationNo\nLEFT JOIN pr_PropertyRegistration PR\n    ON PPA.PropertyApplicationNo = PR.PropertyApplicationNo\nLEFT JOIN pa_Party PP\n    ON PPA.PropertyApplicationNo = PP.PropertyApplicationNo\nLEFT JOIN pa_Organization PO\n    ON PP.PartyNo = PO.PartyNo\nLEFT JOIN la_chequedetail LCD\n    ON LA.LandAcquisitionNo = LCD.LandAcquisitionNo\nWHERE PP.CasteCode = '1203';\n```\n\n**📋 Query Details:**\n• Filters lands acquired by Government (CasteCode '1203')\n• Shows buyer organization name\n• Displays acquisition purpose and mutation date\n• Includes payment details (cheque amount, cheque number)\n• Shows sale consideration value\n\n**💡 Note:** CasteCode '1203' represents Government lands acquisition";
+}
 
         
         if (message.includes('dcs') || (message.includes('dec') && message.includes('relevant'))) {
