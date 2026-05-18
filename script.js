@@ -13,7 +13,7 @@ class XtronChat {
                 "Number of Plots": "query for number of plots", 
                 "Govt Lands": "query for Govt Lands", 
                 "View Records": "query to view records",
-                "Records with LGD": "query to view records with lgd code",
+                "Records with LGD": "query to get lgd code",
                 "Single/Joint Ownership": "query to view single n joint",
                 "Single/Joint Count": "query to view single n joint as count",
                 "Top 10 Less Plots": "query to view top 10 less plots",
@@ -395,7 +395,7 @@ if (message.includes('govt lands') || message.includes('government lands') || me
             return "👁️ **Query to View Records:**\n\n```sql\nSELECT *\nFROM lr_Khatiyan a \nINNER JOIN lr_Khasra b \n    ON a.LocationCode = b.LocationCode AND a.KhatiyanNo = b.KhatiyanNo\nINNER JOIN c_lr_Location d \n    ON a.LocationCode = d.LocationCode\nWHERE (b.Mflag IS NULL OR b.Mflag = 'N');\n```\n\n*Note: Add your specific WHERE conditions at the end*";
         }
         
-        if (message.includes('lgd code') || (message.includes('records') && message.includes('lgd'))) {
+        if (message.includes('lgd code') || message.includes('lgd')) {
             return "🏷️ **Query to View Records with LGD Code:**\n\n```sql\nSELECT *\nFROM lr_Khatiyan a \nINNER JOIN lr_Khasra b \n    ON a.LocationCode = b.LocationCode AND a.KhatiyanNo = b.KhatiyanNo\nINNER JOIN c_lr_Location d \n    ON a.LocationCode = d.LocationCode\nINNER JOIN SC_LGD_MASTER lgd\n    ON a.LocationCode = lgd.LocationCode\nWHERE (b.Mflag IS NULL OR b.Mflag = 'N');\n```";
         }
         
