@@ -14,6 +14,7 @@ class XtronChat {
                 "Govt Lands": "query for Govt Lands", 
                 "View Records": "query to view records",
                 "Records with LGD": "query to get lgd code",
+                "Records with Aadharno ": "query for aadhar records", 
                 "Single/Joint Ownership": "query to view single n joint",
                 "Single/Joint Count": "query to view single n joint as count",
                 "Top 10 Less Plots": "query to view top 10 less plots",
@@ -313,6 +314,85 @@ if (message.includes('non mutated plots') || message.includes('non-mutated plots
            "• Use the extracted coordinates for mapping or further analysis";
 }
 
+// ==================== AADHAR RECORDS QUERY ====================
+if (message.includes('aadhar records') || message.includes('aadhar query') || message.includes('query for aadhar')) {
+    return "🆔 **Aadhar Linked Land Records Query**\n\n" +
+           "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
+           "**📌 QUERY 1: Full Details (All Columns + Aadhar with Name)**\n" +
+           "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
+           "```sql\n" +
+           "SELECT DISTINCT\n" +
+           "    a.*,           -- All columns from lr_Khatiyan\n" +
+           "    b.*,           -- All columns from lr_Khasra\n" +
+           "    pi.ContactNo,  -- Phone number\n" +
+           "    saa.aadhar,    -- Aadhar number from Aadhar table\n" +
+           "    saa.name       -- Name in English from Aadhar table\n" +
+           "FROM lr_Khatiyan a \n" +
+           "INNER JOIN lr_Khasra b \n" +
+           "    ON a.LocationCode = b.LocationCode \n" +
+           "    AND a.KhatiyanNo = b.KhatiyanNo\n" +
+           "LEFT JOIN pa_PlotDetails pd\n" +
+           "    ON pd.KhatiyanNo = a.KhatiyanNo\n" +
+           "LEFT JOIN pa_PropertyApplication ppa\n" +
+           "    ON ppa.PropertyApplicationNo = pd.PropertyApplicationNo\n" +
+           "LEFT JOIN pa_Party pp\n" +
+           "    ON pp.PropertyApplicationNo = ppa.PropertyApplicationNo\n" +
+           "LEFT JOIN pa_Individual pi\n" +
+           "    ON pi.PartyNo = pp.PartyNo\n" +
+           "INNER JOIN SC_Aadhar_Agri saa   -- Use INNER if you only want records with phone match\n" +
+           "    ON pi.ContactNo = saa.phno   -- Joining on phone number!\n" +
+           "WHERE (b.Mflag IS NULL OR b.Mflag = 'N');\n" +
+           "```\n\n" +
+           "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
+           "**📌 QUERY 2: Specific Columns (Aadhar Only - No Name)**\n" +
+           "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
+           "```sql\n" +
+           "SELECT DISTINCT\n" +
+           "    a.*,                        -- All columns from lr_Khatiyan\n" +
+           "    b.KhasraNumber,             -- Khasra number only\n" +
+           "    b.TotArea,                  -- Total area from lr_Khasra\n" +
+           "    -- Add any other specific columns from lr_Khasra you need:\n" +
+           "    -- b.KhasraType,\n" +
+           "    -- b.LandUse,\n" +
+           "    -- etc.\n" +
+           "    pi.ContactNo,               -- Phone number\n" +
+           "    saa.aadhar                  -- Aadhar number from Aadhar table only\n" +
+           "    -- saa.name removed as requested\n" +
+           "FROM lr_Khatiyan a \n" +
+           "INNER JOIN lr_Khasra b \n" +
+           "    ON a.LocationCode = b.LocationCode \n" +
+           "    AND a.KhatiyanNo = b.KhatiyanNo\n" +
+           "LEFT JOIN pa_PlotDetails pd\n" +
+           "    ON pd.KhatiyanNo = a.KhatiyanNo\n" +
+           "LEFT JOIN pa_PropertyApplication ppa\n" +
+           "    ON ppa.PropertyApplicationNo = pd.PropertyApplicationNo\n" +
+           "LEFT JOIN pa_Party pp\n" +
+           "    ON pp.PropertyApplicationNo = ppa.PropertyApplicationNo\n" +
+           "LEFT JOIN pa_Individual pi\n" +
+           "    ON pi.PartyNo = pp.PartyNo\n" +
+           "INNER JOIN SC_Aadhar_Agri saa\n" +
+           "    ON pi.ContactNo = saa.phno\n" +
+           "WHERE (b.Mflag IS NULL OR b.Mflag = 'N');\n" +
+           "```\n\n" +
+           "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
+           "**📋 QUERY DETAILS & DIFFERENCES**\n" +
+           "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n" +
+           "| Feature | Query 1 | Query 2 |\n" +
+           "|---------|---------|---------|\n" +
+           "| lr_Khatiyan columns | All (a.*) | All (a.*) |\n" +
+           "| lr_Khasra columns | All (b.*) | Only KhasraNumber, TotArea |\n" +
+           "| Aadhar number | ✓ Included | ✓ Included |\n" +
+           "| Aadhar name | ✓ Included | ✗ Not included |\n" +
+           "| Contact number | ✓ Included | ✓ Included |\n\n" +
+           "**💡 NOTES:**\n" +
+           "• Both queries join land records with Aadhar data via phone number (ContactNo = phno)\n" +
+           "• Uses INNER JOIN - only returns records with matching phone numbers\n" +
+           "• Change to LEFT JOIN if you want all land records regardless of Aadhar match\n" +
+           "• DISTINCT prevents duplicate rows from multiple joins\n" +
+           "• Aadhar data comes from SC_Aadhar_Agri table\n" +
+           "• Query 2 is more efficient if you don't need all Khasra columns or Aadhar names";
+}
+        
 
 // ==================== NON MUTATED VERIFICATION ====================
 if (message.includes('non mutated verification') || message.includes('non-mutated verification') || message.includes('verify non mutated')) {
