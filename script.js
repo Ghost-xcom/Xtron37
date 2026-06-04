@@ -627,6 +627,12 @@ if (message.includes('total area') || (message.includes('sum') && message.includ
         if (message.includes('hathway') || message.includes('dilrmp_hathway')) {
             return "🔐 DILRMP Hathway WiFi Password: **$0725Dilrmp**";
         }
+
+
+        // ==================== GOVT ID PASSWORD ====================
+if (message.includes('govt id') || message.includes('govt id password') || message.includes('government id password') || message.includes('govt email')) {
+    return "🔐 **Government ID Login Credentials:**\n\n• Email: office.dilrmp@sikkim.gov.in\n• Password: 5riju@Xcom";
+}
         
         // ==================== DEFAULT RESPONSES ====================
         if (message.includes('hello') || message.includes('hi') || message.includes('hey')) {
