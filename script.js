@@ -529,9 +529,50 @@ if (message.includes('govt lands') || message.includes('government lands') || me
             return "👥 **Query for Gender-wise Plots:**\n\n```sql\nSELECT \n    CASE \n        WHEN d.LocationCode LIKE '1%' THEN '1%'\n        WHEN d.LocationCode LIKE '2%' THEN '2%'\n        WHEN d.LocationCode LIKE '3%' THEN '3%'\n        WHEN d.LocationCode LIKE '4%' THEN '4%'\n        WHEN d.LocationCode LIKE '5%' THEN '5%'\n        WHEN d.LocationCode LIKE '6%' THEN '6%'\n        ELSE 'Other'\n    END AS location_start,\n    a.gender,\n    COUNT(DISTINCT a.KhatiyanNo) AS count\nFROM lr_Khatiyan a \nINNER JOIN lr_Khasra b \n    ON a.LocationCode = b.LocationCode AND a.KhatiyanNo = b.KhatiyanNo\nINNER JOIN c_lr_Location d \n    ON a.LocationCode = d.LocationCode\nWHERE (b.Mflag IS NULL OR b.Mflag = 'N') \nGROUP BY \n    CASE \n        WHEN d.LocationCode LIKE '1%' THEN '1%'\n        WHEN d.LocationCode LIKE '2%' THEN '2%'\n        WHEN d.LocationCode LIKE '3%' THEN '3%'\n        WHEN d.LocationCode LIKE '4%' THEN '4%'\n        WHEN d.LocationCode LIKE '5%' THEN '5%'\n        WHEN d.LocationCode LIKE '6%' THEN '6%'\n        ELSE 'Other'\n    END,\n    a.gender\nORDER BY location_start, a.gender;\n```";
         }
 
-        if (message.includes('total area') || (message.includes('sum') && message.includes('area'))) {
-            return "📐 **Query for Total Area:**\n\n```sql\nSELECT SUM(TotArea) FROM dbo.lr_Khasra \nINNER JOIN dbo.lr_Khatiyan ON dbo.lr_Khasra.KhatiyanNo=dbo.lr_Khatiyan.KhatiyanNo;\n```";
-        }
+      // ==================== TOTAL AREA QUERIES ====================
+if (message.includes('total area') || (message.includes('sum') && message.includes('area'))) {
+    return "📐 **Total Area Queries**\n\n" +
+           "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
+           "**📌 QUERY 1: Area of Entire State (District-wise)**\n" +
+           "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
+           "```sql\n" +
+           "SELECT \n" +
+           "    d.LocationName,\n" +
+           "    COUNT(DISTINCT b.KhasraNumber) AS TotalPlots,\n" +
+           "    SUM(b.TotArea) AS TotalArea\n" +
+           "FROM lr_Khatiyan a\n" +
+           "INNER JOIN lr_Khasra b \n" +
+           "    ON a.LocationCode = b.LocationCode \n" +
+           "    AND a.KhatiyanNo = b.KhatiyanNo\n" +
+           "INNER JOIN c_lr_Location d\n" +
+           "    ON a.LocationCode = d.LocationCode\n" +
+           "WHERE (b.Mflag IS NULL OR b.Mflag = 'N')\n" +
+           "GROUP BY d.LocationName\n" +
+           "ORDER BY d.LocationName;\n" +
+           "```\n\n" +
+           "**📊 Output:** Location-wise breakdown of total plots and total area\n\n" +
+           "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
+           "**📌 QUERY 2: Area of a Specific Village**\n" +
+           "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
+           "```sql\n" +
+           "SELECT SUM(kh.TotArea) AS TotalArea\n" +
+           "FROM dbo.lr_Khasra AS kh\n" +
+           "INNER JOIN dbo.lr_Khatiyan AS kt \n" +
+           "    ON kh.KhatiyanNo = kt.KhatiyanNo\n" +
+           "    AND kh.LocationCode = kt.LocationCode\n" +
+           "WHERE kt.LocationCode LIKE '510101';\n" +
+           "```\n\n" +
+           "**📍 How to Use Village Query:**\n" +
+           "• Replace `'510101'` with your actual village LocationCode\n" +
+           "• Use `LIKE '510101'` for exact match\n" +
+           "• Use `LIKE '5101%'` for all villages under a block\n" +
+           "• Use `LIKE '51%'` for all villages under a district\n\n" +
+           "**💡 Notes:**\n" +
+           "• Both queries exclude deleted/flagged records (Mflag IS NULL OR Mflag = 'N')\n" +
+           "• Query 1 groups data by LocationName (District/Block/Village level)\n" +
+           "• Query 2 returns total area for a specific village code\n" +
+           "• Ensure LocationCode format matches your database schema";
+}
 
         if (message.includes('sdc')) {
             return "🔐 **SDC Server Details:**\n\n• Node Internal IP: `10.182.95.136`\n• Node External IP: `164.100.126.44`\n• Server Name: `WEB-9/SSDC`\n• Server Password: `$$web9@12345$#`";
