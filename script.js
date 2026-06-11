@@ -34,6 +34,9 @@ class XtronChat {
                 "Hathway WiFi": "dilrmp_hathway wifi password",
                 "Excel Number of Owners": "excel formula for number of owners",
                 "Gatishakti": "gatishakti"
+            },
+            "Gis python scripts": {
+                 "count features of all the shapefiles":"python script to count feature"
             }
         };
         
@@ -577,6 +580,19 @@ if (message.includes('total area') || (message.includes('sum') && message.includ
         if (message.includes('sdc')) {
             return "🔐 **SDC Server Details:**\n\n• Node Internal IP: `10.182.95.136`\n• Node External IP: `164.100.126.44`\n• Server Name: `WEB-9/SSDC`\n• Server Password: `$$web9@12345$#`";
         }
+
+
+// ==================== PYTHON SCRIPT TO COUNT FEATURES ====================
+if (message.includes('python script to count feature') || message.includes('count features python') || message.includes('qgs feature count') || message.includes('featureCount python')) {
+    return "🐍 **Python Script to Count Features in QGIS:**\n\n" +
+           "```python\n" +
+           "print(sum(l.featureCount() for l in QgsProject.instance().mapLayers().values() if l.type() == QgsMapLayer.VectorLayer))\n" +
+           "```\n\n" +
+           
+           "**📊 Output:** Total number of features across all vector layers in your current QGIS project";
+}
+
+
         
         // ==================== PASSWORDS ====================
 
