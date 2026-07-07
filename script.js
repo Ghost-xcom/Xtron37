@@ -14,7 +14,8 @@ class XtronChat {
                 "Govt Lands": "query for Govt Lands", 
                 "View Records": "query to view records",
                 "Records with LGD": "query to get lgd code",
-                "Records with Aadharno ": "query for aadhar records", 
+                "Records with agriculture Aadharno ": "query for aadhar records", 
+                "Aadhar Seeded": "query for aaadhar seeded",
                 "Single/Joint Ownership": "query to view single n joint",
                 "Single/Joint Count": "query to view single n joint as count",
                 "Top 10 Less Plots": "query to view top 10 less plots",
@@ -36,9 +37,9 @@ class XtronChat {
                 "Gatishakti": "gatishakti"
             },
             "scripts": {
-                 "count features of all the shapefiles":"python script to count feature"
-                 "Main server table to CSV":
-                 "Bhunaksha server table to CSV":
+                 "count features of all the shapefiles":"python script to count feature",
+                 "Main server table to CSV":"shell script for Mainserver CSV",
+                 "Bhunaksha server table to CSV":"shell script for Bhunakshaserver CSV"
             }
         };
         
@@ -397,7 +398,12 @@ if (message.includes('aadhar records') || message.includes('aadhar query') || me
            "• Aadhar data comes from SC_Aadhar_Agri table\n" +
            "• Query 2 is more efficient if you don't need all Khasra columns or Aadhar names";
 }
-        
+
+
+        // ==================== AADHAR SEEDED QUERY ====================
+if (message.includes('aadhar seeded') || message.includes('query for aadhar seeded') || message.includes('seeded aadhar')) {
+    return "🆔 **Query for Aadhar Seeded Records:**\n\n```sql\nSELECT DISTINCT( d.UID ), (d.FirstName + ' ' + d.MiddleName + ' ' + d.LastName) AS name, e.KhatiyanNo, d.IndividualNo\nFROM Application AS a \nINNER JOIN pa_PropertyApplication AS b ON a.ApplicationNo = b.ApplicationNo\nINNER JOIN pa_Party AS c ON b.PropertyApplicationNo = c.PropertyApplicationNo\nINNER JOIN pa_Individual AS d ON c.PartyNo = d.PartyNo\nINNER JOIN pa_PlotDetails AS e ON b.PropertyApplicationNo = e.PropertyApplicationNo\nWHERE b.LocationCode LIKE '230%' AND uid <> ' ';\n```\n\n**📋 Query Details:**\n• Retrieves Aadhar seeded records\n• Shows UID (Aadhar number), Full Name, KhatiyanNo, and IndividualNo\n• Filters for LocationCode starting with '230%'\n• Excludes empty UID values\n• Joins Application, PropertyApplication, Party, Individual, and PlotDetails tables";
+}
 
 // ==================== NON MUTATED VERIFICATION ====================
 if (message.includes('non mutated verification') || message.includes('non-mutated verification') || message.includes('verify non mutated')) {
