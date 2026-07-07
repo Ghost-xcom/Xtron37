@@ -35,8 +35,10 @@ class XtronChat {
                 "Excel Number of Owners": "excel formula for number of owners",
                 "Gatishakti": "gatishakti"
             },
-            "Gis python scripts": {
+            "scripts": {
                  "count features of all the shapefiles":"python script to count feature"
+                 "Main server table to CSV":
+                 "Bhunaksha server table to CSV":
             }
         };
         
@@ -582,6 +584,8 @@ if (message.includes('total area') || (message.includes('sum') && message.includ
         }
 
 
+        //--------- Scripts ---------------------
+
 // ==================== PYTHON SCRIPT TO COUNT FEATURES ====================
 if (message.includes('python script to count feature') || message.includes('count features python') || message.includes('qgs feature count') || message.includes('featureCount python')) {
     return "🐍 **Python Script to Count Features in QGIS:**\n\n" +
@@ -592,6 +596,16 @@ if (message.includes('python script to count feature') || message.includes('coun
            "**📊 Output:** Total number of features across all vector layers in your current QGIS project";
 }
 
+
+        // ==================== SHELL SCRIPT FOR MAINSERVER CSV ====================
+if (message.includes('shell script for mainserver csv') || message.includes('mainserver csv') || message.includes('farmerid csv') || message.includes('bcp script')) {
+    return "📁 **Shell Script for Mainserver CSV Export:**\n\n```batch\necho state_code,district_code,sub_district_code,village_code,Land_Usage_Type,Land_Ownership,State_land_unique_code,Survey_Number,khata_no,farm_land_plotid,state_land_owner_number,state_land_main_owner_number,owner_name_local,identifier_name_local,indentifier_type,mutation_date,mutation_type,area_of_parcel_Integer_Part,area_of_parcel_Decimal_Part,area_of_parcel_unit,ownership_type,Owner_Aadhaar_as_per_RoR,Government_Liabilities,Public_Liabilities,Land_Type,Owner_PAN_as_per_RoR,gataseqno,flp_owner_no > D:\\farmerid_header.csv && bcp \"SELECT state_code,district_code,sub_district_code,village_code,Land_Usage_Type,Land_Ownership,State_land_unique_code,Survey_Number,khata_no,farm_land_plotid,state_land_owner_number,state_land_main_owner_number,owner_name_local,identifier_name_local,indentifier_type,mutation_date,mutation_type,area_of_parcel_Integer_Part,area_of_parcel_Decimal_Part,area_of_parcel_unit,ownership_type,Owner_Aadhaar_as_per_RoR,Government_Liabilities,Public_Liabilities,Land_Type,Owner_PAN_as_per_RoR,gataseqno,flp_owner_no FROM ILRMS_MAIN.dbo.Farmerid\" queryout \"D:\\farmerid_data.csv\" ILRMS-DB -T -c -t, -C 65001 && copy /b D:\\farmerid_header.csv + D:\\farmerid_data.csv D:\\farmerid.csv && del D:\\farmerid_header.csv D:\\farmerid_data.csv && echo Done! CSV saved to D:\\farmerid.csv\n```\n\n**📋 Script Breakdown:**\n1. Creates header CSV with column names\n2. Exports data from Farmerid table using BCP\n3. Combines header + data into final CSV\n4. Deletes temporary files\n5. Confirms completion";
+}
+
+        // ==================== SHELL SCRIPT FOR BHUNAKSHA SERVER CSV ====================
+if (message.includes('shell script for bhunakshaserver csv') || message.includes('bhunakshaserver csv') || message.includes('shakti csv') || message.includes('bhunaksha csv')) {
+    return "📁 **PowerShell Script for Bhunaksha Server CSV Export:**\n\n```powershell\n$c=New-Object System.Data.SqlClient.SqlConnection('Server=SRC434036F71;Database=ILRMS;Integrated Security=True;TrustServerCertificate=True;');$c.Open();$cmd=$c.CreateCommand();$cmd.CommandText='SELECT state_code,district_code,sub_district_code,village_code,Land_Usage_Type,Land_Ownership,State_land_unique_code,Survey_Number,khata_no,farm_land_plotid,state_land_owner_number,state_land_main_owner_number,owner_name_local,identifier_name_local,indentifier_type,mutation_date,mutation_type,area_of_parcel_Integer_Part,area_of_parcel_Decimal_Part,area_of_parcel_unit,ownership_type,Owner_Aadhaar_as_per_RoR,Government_Liabilities,Public_Liabilities,Land_Type,Owner_PAN_as_per_RoR,gataseqno,flp_owner_no,owner_suffix FROM Shakti';$r=$cmd.ExecuteReader();$dt=New-Object System.Data.DataTable;$dt.Load($r);$c.Close();$dt | Export-Csv 'E:\\shakti.csv' -NoTypeInformation -Encoding UTF8;Write-Host 'Done! CSV exported to E:\\shakti.csv with UTF-8 (Devanagari preserved!)'\n```\n\n**📋 Script Details:**\n• Database: ILRMS on Server SRC434036F71\n• Table: Shakti\n• Output: E:\\shakti.csv\n• Encoding: UTF-8 (Preserves Devanagari/Nepali text)\n• Includes owner_suffix column\n\n**💡 How to Run:**\n1. Open PowerShell as Administrator\n2. Copy and paste the script\n3. Press Enter to execute";
+}
 
         
         // ==================== PASSWORDS ====================
