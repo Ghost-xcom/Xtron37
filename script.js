@@ -36,10 +36,10 @@ class XtronChat {
                 "Excel Number of Owners": "excel formula for number of owners",
                 "Gatishakti": "gatishakti"
             },
-            "scripts": {
-                 "count features of all the shapefiles":"python script to count feature",
-                 "Main server table to CSV":"shell script for Mainserver CSV",
-                 "Bhunaksha server table to CSV":"shell script for Bhunakshaserver CSV"
+            "Scripts": {
+                "Count features of all the shapefiles": "python script to count feature",
+                "Main server table to CSV": "shell script for Mainserver CSV",
+                "Bhunaksha server table to CSV": "shell script for Bhunakshaserver CSV"
             }
         };
         
@@ -269,211 +269,208 @@ class XtronChat {
         }
 
         // ==================== NON MUTATED PLOTS ====================
-if (message.includes('non mutated plots') || message.includes('non-mutated plots') || message.includes('non mutated')) {
-    return "📊 **Non Mutated Plots Extraction Guide:**\n\n" +
-           "**Step 1: Extract Non Mutated Plot Numbers**\n" +
-           "```sql\n" +
-           "SELECT\n" +
-           "    a.OwnerName, a.FathersName, a.KhatiyanNo, b.KhasraNumber, b.TotArea\n" +
-           "FROM lr_Khatiyan a \n" +
-           "INNER JOIN lr_Khasra b \n" +
-           "    ON a.LocationCode = b.LocationCode AND a.KhatiyanNo = b.KhatiyanNo\n" +
-           "INNER JOIN c_lr_Location d \n" +
-           "    ON a.LocationCode = d.LocationCode\n" +
-           "WHERE (b.Mflag IS NULL OR b.Mflag = 'N') \n" +
-           "    AND a.LocationCode IN ('440101', '440102') /* Replace with your block codes */\n" +
-           "    AND b.KhasraNumber NOT LIKE '%/%'\n" +
-           "    AND b.KhasraNumber NOT IN (\n" +
-           "        SELECT DISTINCT \n" +
-           "            LEFT(k.KhasraNumber, CHARINDEX('/', k.KhasraNumber) - 1)\n" +
-           "        FROM lr_Khasra k\n" +
-           "        WHERE k.LocationCode IN ('440101', '440102') /* Replace with your block codes */\n" +
-           "            AND k.KhasraNumber LIKE '%/%'\n" +
-           "    );\n" +
-           "```\n\n" +
-           "**Step 2: Extract Coordinates from Shapefile**\n" +
-           "```\n" +
-           "1. Open the shapefile for the same block in QGIS/ArcGIS\n" +
-           "2. Use the plot numbers from Step 1 as a filter\n" +
-           "3. Export the selected features with their geometry\n" +
-           "4. Extract coordinates (X,Y or Lat/Long) from the geometry\n" +
-           "```\n\n" +
-           "**Step 3: Map Plot Numbers with Coordinates**\n" +
-           "```sql\n" +
-           "-- Create a mapping table or use Excel to join:\n" +
-           "-- | KhasraNumber | OwnerName | TotArea | X_Coord | Y_Coord |\n" +
-           "-- \n" +
-           "-- For SQL Server with spatial data:\n" +
-           "SELECT \n" +
-           "    plots.KhasraNumber,\n" +
-           "    plots.OwnerName,\n" +
-           "    plots.TotArea,\n" +
-           "    shape.ShapeGeometry.STX as Longitude,\n" +
-           "    shape.ShapeGeometry.STY as Latitude\n" +
-           "FROM extracted_plots plots\n" +
-           "INNER JOIN block_shapefile shape\n" +
-           "    ON plots.KhasraNumber = shape.KhasraNumber;\n" +
-           "```\n\n" +
-           "**💡 Pro Tips:**\n" +
-           "• Replace `'440101', '440102'` with your actual block LocationCode(s)\n" +
-           "• The query excludes mutated plots (those with '/' in KhasraNumber)\n" +
-           "• Use the extracted coordinates for mapping or further analysis";
-}
+        if (message.includes('non mutated plots') || message.includes('non-mutated plots') || message.includes('non mutated')) {
+            return "📊 **Non Mutated Plots Extraction Guide:**\n\n" +
+                   "**Step 1: Extract Non Mutated Plot Numbers**\n" +
+                   "```sql\n" +
+                   "SELECT\n" +
+                   "    a.OwnerName, a.FathersName, a.KhatiyanNo, b.KhasraNumber, b.TotArea\n" +
+                   "FROM lr_Khatiyan a \n" +
+                   "INNER JOIN lr_Khasra b \n" +
+                   "    ON a.LocationCode = b.LocationCode AND a.KhatiyanNo = b.KhatiyanNo\n" +
+                   "INNER JOIN c_lr_Location d \n" +
+                   "    ON a.LocationCode = d.LocationCode\n" +
+                   "WHERE (b.Mflag IS NULL OR b.Mflag = 'N') \n" +
+                   "    AND a.LocationCode IN ('440101', '440102') /* Replace with your block codes */\n" +
+                   "    AND b.KhasraNumber NOT LIKE '%/%'\n" +
+                   "    AND b.KhasraNumber NOT IN (\n" +
+                   "        SELECT DISTINCT \n" +
+                   "            LEFT(k.KhasraNumber, CHARINDEX('/', k.KhasraNumber) - 1)\n" +
+                   "        FROM lr_Khasra k\n" +
+                   "        WHERE k.LocationCode IN ('440101', '440102') /* Replace with your block codes */\n" +
+                   "            AND k.KhasraNumber LIKE '%/%'\n" +
+                   "    );\n" +
+                   "```\n\n" +
+                   "**Step 2: Extract Coordinates from Shapefile**\n" +
+                   "```\n" +
+                   "1. Open the shapefile for the same block in QGIS/ArcGIS\n" +
+                   "2. Use the plot numbers from Step 1 as a filter\n" +
+                   "3. Export the selected features with their geometry\n" +
+                   "4. Extract coordinates (X,Y or Lat/Long) from the geometry\n" +
+                   "```\n\n" +
+                   "**Step 3: Map Plot Numbers with Coordinates**\n" +
+                   "```sql\n" +
+                   "-- Create a mapping table or use Excel to join:\n" +
+                   "-- | KhasraNumber | OwnerName | TotArea | X_Coord | Y_Coord |\n" +
+                   "-- \n" +
+                   "-- For SQL Server with spatial data:\n" +
+                   "SELECT \n" +
+                   "    plots.KhasraNumber,\n" +
+                   "    plots.OwnerName,\n" +
+                   "    plots.TotArea,\n" +
+                   "    shape.ShapeGeometry.STX as Longitude,\n" +
+                   "    shape.ShapeGeometry.STY as Latitude\n" +
+                   "FROM extracted_plots plots\n" +
+                   "INNER JOIN block_shapefile shape\n" +
+                   "    ON plots.KhasraNumber = shape.KhasraNumber;\n" +
+                   "```\n\n" +
+                   "**💡 Pro Tips:**\n" +
+                   "• Replace `'440101', '440102'` with your actual block LocationCode(s)\n" +
+                   "• The query excludes mutated plots (those with '/' in KhasraNumber)\n" +
+                   "• Use the extracted coordinates for mapping or further analysis";
+        }
 
-// ==================== AADHAR RECORDS QUERY ====================
-if (message.includes('aadhar records') || message.includes('aadhar query') || message.includes('query for aadhar')) {
-    return "🆔 **Aadhar Linked Land Records Query**\n\n" +
-           "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
-           "**📌 QUERY 1: Full Details (All Columns + Aadhar with Name)**\n" +
-           "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
-           "```sql\n" +
-           "SELECT DISTINCT\n" +
-           "    a.*,           -- All columns from lr_Khatiyan\n" +
-           "    b.*,           -- All columns from lr_Khasra\n" +
-           "    pi.ContactNo,  -- Phone number\n" +
-           "    saa.aadhar,    -- Aadhar number from Aadhar table\n" +
-           "    saa.name       -- Name in English from Aadhar table\n" +
-           "FROM lr_Khatiyan a \n" +
-           "INNER JOIN lr_Khasra b \n" +
-           "    ON a.LocationCode = b.LocationCode \n" +
-           "    AND a.KhatiyanNo = b.KhatiyanNo\n" +
-           "LEFT JOIN pa_PlotDetails pd\n" +
-           "    ON pd.KhatiyanNo = a.KhatiyanNo\n" +
-           "LEFT JOIN pa_PropertyApplication ppa\n" +
-           "    ON ppa.PropertyApplicationNo = pd.PropertyApplicationNo\n" +
-           "LEFT JOIN pa_Party pp\n" +
-           "    ON pp.PropertyApplicationNo = ppa.PropertyApplicationNo\n" +
-           "LEFT JOIN pa_Individual pi\n" +
-           "    ON pi.PartyNo = pp.PartyNo\n" +
-           "INNER JOIN SC_Aadhar_Agri saa   -- Use INNER if you only want records with phone match\n" +
-           "    ON pi.ContactNo = saa.phno   -- Joining on phone number!\n" +
-           "WHERE (b.Mflag IS NULL OR b.Mflag = 'N');\n" +
-           "```\n\n" +
-           "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
-           "**📌 QUERY 2: Specific Columns (Aadhar Only - No Name)**\n" +
-           "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
-           "```sql\n" +
-           "SELECT DISTINCT\n" +
-           "    a.*,                        -- All columns from lr_Khatiyan\n" +
-           "    b.KhasraNumber,             -- Khasra number only\n" +
-           "    b.TotArea,                  -- Total area from lr_Khasra\n" +
-           "    -- Add any other specific columns from lr_Khasra you need:\n" +
-           "    -- b.KhasraType,\n" +
-           "    -- b.LandUse,\n" +
-           "    -- etc.\n" +
-           "    pi.ContactNo,               -- Phone number\n" +
-           "    saa.aadhar                  -- Aadhar number from Aadhar table only\n" +
-           "    -- saa.name removed as requested\n" +
-           "FROM lr_Khatiyan a \n" +
-           "INNER JOIN lr_Khasra b \n" +
-           "    ON a.LocationCode = b.LocationCode \n" +
-           "    AND a.KhatiyanNo = b.KhatiyanNo\n" +
-           "LEFT JOIN pa_PlotDetails pd\n" +
-           "    ON pd.KhatiyanNo = a.KhatiyanNo\n" +
-           "LEFT JOIN pa_PropertyApplication ppa\n" +
-           "    ON ppa.PropertyApplicationNo = pd.PropertyApplicationNo\n" +
-           "LEFT JOIN pa_Party pp\n" +
-           "    ON pp.PropertyApplicationNo = ppa.PropertyApplicationNo\n" +
-           "LEFT JOIN pa_Individual pi\n" +
-           "    ON pi.PartyNo = pp.PartyNo\n" +
-           "INNER JOIN SC_Aadhar_Agri saa\n" +
-           "    ON pi.ContactNo = saa.phno\n" +
-           "WHERE (b.Mflag IS NULL OR b.Mflag = 'N');\n" +
-           "```\n\n" +
-           "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
-           "**📋 QUERY DETAILS & DIFFERENCES**\n" +
-           "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n" +
-           "| Feature | Query 1 | Query 2 |\n" +
-           "|---------|---------|---------|\n" +
-           "| lr_Khatiyan columns | All (a.*) | All (a.*) |\n" +
-           "| lr_Khasra columns | All (b.*) | Only KhasraNumber, TotArea |\n" +
-           "| Aadhar number | ✓ Included | ✓ Included |\n" +
-           "| Aadhar name | ✓ Included | ✗ Not included |\n" +
-           "| Contact number | ✓ Included | ✓ Included |\n\n" +
-           "**💡 NOTES:**\n" +
-           "• Both queries join land records with Aadhar data via phone number (ContactNo = phno)\n" +
-           "• Uses INNER JOIN - only returns records with matching phone numbers\n" +
-           "• Change to LEFT JOIN if you want all land records regardless of Aadhar match\n" +
-           "• DISTINCT prevents duplicate rows from multiple joins\n" +
-           "• Aadhar data comes from SC_Aadhar_Agri table\n" +
-           "• Query 2 is more efficient if you don't need all Khasra columns or Aadhar names";
-}
-
+        // ==================== AADHAR RECORDS QUERY ====================
+        if (message.includes('aadhar records') || message.includes('aadhar query') || message.includes('query for aadhar')) {
+            return "🆔 **Aadhar Linked Land Records Query**\n\n" +
+                   "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
+                   "**📌 QUERY 1: Full Details (All Columns + Aadhar with Name)**\n" +
+                   "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
+                   "```sql\n" +
+                   "SELECT DISTINCT\n" +
+                   "    a.*,           -- All columns from lr_Khatiyan\n" +
+                   "    b.*,           -- All columns from lr_Khasra\n" +
+                   "    pi.ContactNo,  -- Phone number\n" +
+                   "    saa.aadhar,    -- Aadhar number from Aadhar table\n" +
+                   "    saa.name       -- Name in English from Aadhar table\n" +
+                   "FROM lr_Khatiyan a \n" +
+                   "INNER JOIN lr_Khasra b \n" +
+                   "    ON a.LocationCode = b.LocationCode \n" +
+                   "    AND a.KhatiyanNo = b.KhatiyanNo\n" +
+                   "LEFT JOIN pa_PlotDetails pd\n" +
+                   "    ON pd.KhatiyanNo = a.KhatiyanNo\n" +
+                   "LEFT JOIN pa_PropertyApplication ppa\n" +
+                   "    ON ppa.PropertyApplicationNo = pd.PropertyApplicationNo\n" +
+                   "LEFT JOIN pa_Party pp\n" +
+                   "    ON pp.PropertyApplicationNo = ppa.PropertyApplicationNo\n" +
+                   "LEFT JOIN pa_Individual pi\n" +
+                   "    ON pi.PartyNo = pp.PartyNo\n" +
+                   "INNER JOIN SC_Aadhar_Agri saa   -- Use INNER if you only want records with phone match\n" +
+                   "    ON pi.ContactNo = saa.phno   -- Joining on phone number!\n" +
+                   "WHERE (b.Mflag IS NULL OR b.Mflag = 'N');\n" +
+                   "```\n\n" +
+                   "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
+                   "**📌 QUERY 2: Specific Columns (Aadhar Only - No Name)**\n" +
+                   "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
+                   "```sql\n" +
+                   "SELECT DISTINCT\n" +
+                   "    a.*,                        -- All columns from lr_Khatiyan\n" +
+                   "    b.KhasraNumber,             -- Khasra number only\n" +
+                   "    b.TotArea,                  -- Total area from lr_Khasra\n" +
+                   "    -- Add any other specific columns from lr_Khasra you need:\n" +
+                   "    -- b.KhasraType,\n" +
+                   "    -- b.LandUse,\n" +
+                   "    -- etc.\n" +
+                   "    pi.ContactNo,               -- Phone number\n" +
+                   "    saa.aadhar                  -- Aadhar number from Aadhar table only\n" +
+                   "    -- saa.name removed as requested\n" +
+                   "FROM lr_Khatiyan a \n" +
+                   "INNER JOIN lr_Khasra b \n" +
+                   "    ON a.LocationCode = b.LocationCode \n" +
+                   "    AND a.KhatiyanNo = b.KhatiyanNo\n" +
+                   "LEFT JOIN pa_PlotDetails pd\n" +
+                   "    ON pd.KhatiyanNo = a.KhatiyanNo\n" +
+                   "LEFT JOIN pa_PropertyApplication ppa\n" +
+                   "    ON ppa.PropertyApplicationNo = pd.PropertyApplicationNo\n" +
+                   "LEFT JOIN pa_Party pp\n" +
+                   "    ON pp.PropertyApplicationNo = ppa.PropertyApplicationNo\n" +
+                   "LEFT JOIN pa_Individual pi\n" +
+                   "    ON pi.PartyNo = pp.PartyNo\n" +
+                   "INNER JOIN SC_Aadhar_Agri saa\n" +
+                   "    ON pi.ContactNo = saa.phno\n" +
+                   "WHERE (b.Mflag IS NULL OR b.Mflag = 'N');\n" +
+                   "```\n\n" +
+                   "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
+                   "**📋 QUERY DETAILS & DIFFERENCES**\n" +
+                   "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n" +
+                   "| Feature | Query 1 | Query 2 |\n" +
+                   "|---------|---------|---------|\n" +
+                   "| lr_Khatiyan columns | All (a.*) | All (a.*) |\n" +
+                   "| lr_Khasra columns | All (b.*) | Only KhasraNumber, TotArea |\n" +
+                   "| Aadhar number | ✓ Included | ✓ Included |\n" +
+                   "| Aadhar name | ✓ Included | ✗ Not included |\n" +
+                   "| Contact number | ✓ Included | ✓ Included |\n\n" +
+                   "**💡 NOTES:**\n" +
+                   "• Both queries join land records with Aadhar data via phone number (ContactNo = phno)\n" +
+                   "• Uses INNER JOIN - only returns records with matching phone numbers\n" +
+                   "• Change to LEFT JOIN if you want all land records regardless of Aadhar match\n" +
+                   "• DISTINCT prevents duplicate rows from multiple joins\n" +
+                   "• Aadhar data comes from SC_Aadhar_Agri table\n" +
+                   "• Query 2 is more efficient if you don't need all Khasra columns or Aadhar names";
+        }
 
         // ==================== AADHAR SEEDED QUERY ====================
-if (message.includes('aadhar seeded') || message.includes('query for aadhar seeded') || message.includes('seeded aadhar')) {
-    return "🆔 **Query for Aadhar Seeded Records:**\n\n```sql\nSELECT DISTINCT( d.UID ), (d.FirstName + ' ' + d.MiddleName + ' ' + d.LastName) AS name, e.KhatiyanNo, d.IndividualNo\nFROM Application AS a \nINNER JOIN pa_PropertyApplication AS b ON a.ApplicationNo = b.ApplicationNo\nINNER JOIN pa_Party AS c ON b.PropertyApplicationNo = c.PropertyApplicationNo\nINNER JOIN pa_Individual AS d ON c.PartyNo = d.PartyNo\nINNER JOIN pa_PlotDetails AS e ON b.PropertyApplicationNo = e.PropertyApplicationNo\nWHERE b.LocationCode LIKE '230%' AND uid <> ' ';\n```\n\n**📋 Query Details:**\n• Retrieves Aadhar seeded records\n• Shows UID (Aadhar number), Full Name, KhatiyanNo, and IndividualNo\n• Filters for LocationCode starting with '230%'\n• Excludes empty UID values\n• Joins Application, PropertyApplication, Party, Individual, and PlotDetails tables";
-}
+        if (message.includes('aadhar seeded') || message.includes('query for aadhar seeded') || message.includes('seeded aadhar')) {
+            return "🆔 **Query for Aadhar Seeded Records:**\n\n```sql\nSELECT DISTINCT( d.UID ), (d.FirstName + ' ' + d.MiddleName + ' ' + d.LastName) AS name, e.KhatiyanNo, d.IndividualNo\nFROM Application AS a \nINNER JOIN pa_PropertyApplication AS b ON a.ApplicationNo = b.ApplicationNo\nINNER JOIN pa_Party AS c ON b.PropertyApplicationNo = c.PropertyApplicationNo\nINNER JOIN pa_Individual AS d ON c.PartyNo = d.PartyNo\nINNER JOIN pa_PlotDetails AS e ON b.PropertyApplicationNo = e.PropertyApplicationNo\nWHERE b.LocationCode LIKE '230%' AND uid <> ' ';\n```\n\n**📋 Query Details:**\n• Retrieves Aadhar seeded records\n• Shows UID (Aadhar number), Full Name, KhatiyanNo, and IndividualNo\n• Filters for LocationCode starting with '230%'\n• Excludes empty UID values\n• Joins Application, PropertyApplication, Party, Individual, and PlotDetails tables";
+        }
 
-// ==================== NON MUTATED VERIFICATION ====================
-if (message.includes('non mutated verification') || message.includes('non-mutated verification') || message.includes('verify non mutated')) {
-    return "🔍 **Non Mutated Verification Process:**\n\n" +
-           "**Step 1: Extract DCS Relevant Data**\n" +
-           "```sql\n" +
-           "SELECT\n" +
-           "    a.OwnerName, a.FathersName, a.KhatiyanNo, b.KhasraNumber, b.TotArea\n" +
-           "FROM lr_Khatiyan a \n" +
-           "INNER JOIN lr_Khasra b \n" +
-           "    ON a.LocationCode = b.LocationCode AND a.KhatiyanNo = b.KhatiyanNo\n" +
-           "INNER JOIN c_lr_Location d \n" +
-           "    ON a.LocationCode = d.LocationCode\n" +
-           "WHERE (b.Mflag IS NULL OR b.Mflag = 'N') \n" +
-           "    AND a.LocationCode IN ('440101', '440102'); /* Replace with your block codes */\n" +
-           "```\n\n" +
-           "**Step 2: Filter and Extract Plot Numbers with '/'**\n" +
-           "```\n" +
-           "1. From the extracted data, filter KhasraNumber column\n" +
-           "2. Keep only records where KhasraNumber contains '/'\n" +
-           "3. Copy these plot numbers to a new column/sheet\n" +
-           "```\n\n" +
-           "**Step 3: Extract Plot Number Before '/' Using Excel Formula**\n" +
-           "```excel\n" +
-           "=LEFT(A1, FIND(\"/\", A1) - 1)\n" +
-           "```\n" +
-           "*Where A1 contains the KhasraNumber with '/' (e.g., '123/456' becomes '123')*\n\n" +
-           "**Step 4: Copy Column to Non Mutated Records**\n" +
-           "```\n" +
-           "1. Copy the extracted numbers from Step 3\n" +
-           "2. Paste them into a new column next to your non-mutated records\n" +
-           "3. Ensure both datasets are in the same worksheet for comparison\n" +
-           "```\n\n" +
-           "**Step 5: Find Common Entries Between Both Datasets**\n" +
-           "```excel\n" +
-           "=IF(COUNTIF(B:B, A2)>0, \"Common\", \"Unique\")\n" +
-           "```\n" +
-           "*Where:\n" +
-           "   - Column A contains non-mutated plot numbers\n" +
-           "   - Column B contains extracted plot numbers from Step 3\n" +
-           "   - 'Common' = Plot number exists in both datasets\n" +
-           "   - 'Unique' = Plot number only in non-mutated records*\n\n" +
-           "**Step 6: Verification Rule**\n" +
-           "```\n" +
-           "✅ ALL MUST BE UNIQUE\n" +
-           "\n" +
-           "Expected Result:\n" +
-           "• Every non-mutated plot number should show 'Unique'\n" +
-           "• If any shows 'Common', that plot has been mutated and shouldn't be in non-mutated list\n" +
-           "• This confirms your non-mutated records are correctly identified\n" +
-           "```\n\n" +
-           "**📋 Quick Excel Setup Guide:**\n" +
-           "| Column A (Non-Mutated) | Column B (From Step 3) | Column C (Verification) |\n" +
-           "|------------------------|------------------------|-------------------------|\n" +
-           "| 123 | 45 | =IF(COUNTIF(B:B, A2)>0, \"Common\", \"Unique\") |\n" +
-           "| 456 | 67 | =IF(COUNTIF(B:B, A3)>0, \"Common\", \"Unique\") |\n" +
-           "| 789 | 89 | =IF(COUNTIF(B:B, A4)>0, \"Common\", \"Unique\") |\n\n" +
-           "**⚠️ Important:**\n" +
-           "• All non-mutated plot numbers should return 'Unique'\n" +
-           "• If any return 'Common', those plots have been mutated and need to be removed from non-mutated list\n" +
-           "• This ensures data integrity between mutated and non-mutated records";
-}
-
+        // ==================== NON MUTATED VERIFICATION ====================
+        if (message.includes('non mutated verification') || message.includes('non-mutated verification') || message.includes('verify non mutated')) {
+            return "🔍 **Non Mutated Verification Process:**\n\n" +
+                   "**Step 1: Extract DCS Relevant Data**\n" +
+                   "```sql\n" +
+                   "SELECT\n" +
+                   "    a.OwnerName, a.FathersName, a.KhatiyanNo, b.KhasraNumber, b.TotArea\n" +
+                   "FROM lr_Khatiyan a \n" +
+                   "INNER JOIN lr_Khasra b \n" +
+                   "    ON a.LocationCode = b.LocationCode AND a.KhatiyanNo = b.KhatiyanNo\n" +
+                   "INNER JOIN c_lr_Location d \n" +
+                   "    ON a.LocationCode = d.LocationCode\n" +
+                   "WHERE (b.Mflag IS NULL OR b.Mflag = 'N') \n" +
+                   "    AND a.LocationCode IN ('440101', '440102'); /* Replace with your block codes */\n" +
+                   "```\n\n" +
+                   "**Step 2: Filter and Extract Plot Numbers with '/'**\n" +
+                   "```\n" +
+                   "1. From the extracted data, filter KhasraNumber column\n" +
+                   "2. Keep only records where KhasraNumber contains '/'\n" +
+                   "3. Copy these plot numbers to a new column/sheet\n" +
+                   "```\n\n" +
+                   "**Step 3: Extract Plot Number Before '/' Using Excel Formula**\n" +
+                   "```excel\n" +
+                   "=LEFT(A1, FIND(\"/\", A1) - 1)\n" +
+                   "```\n" +
+                   "*Where A1 contains the KhasraNumber with '/' (e.g., '123/456' becomes '123')*\n\n" +
+                   "**Step 4: Copy Column to Non Mutated Records**\n" +
+                   "```\n" +
+                   "1. Copy the extracted numbers from Step 3\n" +
+                   "2. Paste them into a new column next to your non-mutated records\n" +
+                   "3. Ensure both datasets are in the same worksheet for comparison\n" +
+                   "```\n\n" +
+                   "**Step 5: Find Common Entries Between Both Datasets**\n" +
+                   "```excel\n" +
+                   "=IF(COUNTIF(B:B, A2)>0, \"Common\", \"Unique\")\n" +
+                   "```\n" +
+                   "*Where:\n" +
+                   "   - Column A contains non-mutated plot numbers\n" +
+                   "   - Column B contains extracted plot numbers from Step 3\n" +
+                   "   - 'Common' = Plot number exists in both datasets\n" +
+                   "   - 'Unique' = Plot number only in non-mutated records*\n\n" +
+                   "**Step 6: Verification Rule**\n" +
+                   "```\n" +
+                   "✅ ALL MUST BE UNIQUE\n" +
+                   "\n" +
+                   "Expected Result:\n" +
+                   "• Every non-mutated plot number should show 'Unique'\n" +
+                   "• If any shows 'Common', that plot has been mutated and shouldn't be in non-mutated list\n" +
+                   "• This confirms your non-mutated records are correctly identified\n" +
+                   "```\n\n" +
+                   "**📋 Quick Excel Setup Guide:**\n" +
+                   "| Column A (Non-Mutated) | Column B (From Step 3) | Column C (Verification) |\n" +
+                   "|------------------------|------------------------|-------------------------|\n" +
+                   "| 123 | 45 | =IF(COUNTIF(B:B, A2)>0, \"Common\", \"Unique\") |\n" +
+                   "| 456 | 67 | =IF(COUNTIF(B:B, A3)>0, \"Common\", \"Unique\") |\n" +
+                   "| 789 | 89 | =IF(COUNTIF(B:B, A4)>0, \"Common\", \"Unique\") |\n\n" +
+                   "**⚠️ Important:**\n" +
+                   "• All non-mutated plot numbers should return 'Unique'\n" +
+                   "• If any return 'Common', those plots have been mutated and need to be removed from non-mutated list\n" +
+                   "• This ensures data integrity between mutated and non-mutated records";
+        }
 
         // ==================== GOVT LANDS QUERY ====================
-if (message.includes('govt lands') || message.includes('government lands') || message.includes('govt land query')) {
-    return "🏛️ **Government Lands Acquisition Query:**\n\n```sql\nSELECT  \n    PO.OrganizationName AS Buyer,\n    PP.CasteCode,\n    LA.PurposeofAcquisition,\n    PPA.MutationDate,\n    LCD.ChequeAmount,\n    LCD.ChequeNumber,\n    PR.ConsiderationValue AS SaleValue\nFROM la_Land_Acquisition LA\nLEFT JOIN pa_PropertyApplication PPA\n    ON LA.PropertyApplicationNo = PPA.PropertyApplicationNo\nLEFT JOIN pr_PropertyRegistration PR\n    ON PPA.PropertyApplicationNo = PR.PropertyApplicationNo\nLEFT JOIN pa_Party PP\n    ON PPA.PropertyApplicationNo = PP.PropertyApplicationNo\nLEFT JOIN pa_Organization PO\n    ON PP.PartyNo = PO.PartyNo\nLEFT JOIN la_chequedetail LCD\n    ON LA.LandAcquisitionNo = LCD.LandAcquisitionNo\nWHERE PP.CasteCode = '1203';\n```\n\n**📋 Query Details:**\n• Filters lands acquired by Government (CasteCode '1203')\n• Shows buyer organization name\n• Displays acquisition purpose and mutation date\n• Includes payment details (cheque amount, cheque number)\n• Shows sale consideration value\n\n**💡 Note:** CasteCode '1203' represents Government lands acquisition";
-}
+        if (message.includes('govt lands') || message.includes('government lands') || message.includes('govt land query')) {
+            return "🏛️ **Government Lands Acquisition Query:**\n\n```sql\nSELECT  \n    PO.OrganizationName AS Buyer,\n    PP.CasteCode,\n    LA.PurposeofAcquisition,\n    PPA.MutationDate,\n    LCD.ChequeAmount,\n    LCD.ChequeNumber,\n    PR.ConsiderationValue AS SaleValue\nFROM la_Land_Acquisition LA\nLEFT JOIN pa_PropertyApplication PPA\n    ON LA.PropertyApplicationNo = PPA.PropertyApplicationNo\nLEFT JOIN pr_PropertyRegistration PR\n    ON PPA.PropertyApplicationNo = PR.PropertyApplicationNo\nLEFT JOIN pa_Party PP\n    ON PPA.PropertyApplicationNo = PP.PropertyApplicationNo\nLEFT JOIN pa_Organization PO\n    ON PP.PartyNo = PO.PartyNo\nLEFT JOIN la_chequedetail LCD\n    ON LA.LandAcquisitionNo = LCD.LandAcquisitionNo\nWHERE PP.CasteCode = '1203';\n```\n\n**📋 Query Details:**\n• Filters lands acquired by Government (CasteCode '1203')\n• Shows buyer organization name\n• Displays acquisition purpose and mutation date\n• Includes payment details (cheque amount, cheque number)\n• Shows sale consideration value\n\n**💡 Note:** CasteCode '1203' represents Government lands acquisition";
+        }
 
-        
         if (message.includes('dcs') || (message.includes('dec') && message.includes('relevant'))) {
             return "📊 **Query for DCS Data Extraction:**\n\n```sql\nSELECT\n    a.OwnerName, a.FathersName, a.KhatiyanNo, b.KhasraNumber, b.TotArea\nFROM lr_Khatiyan a \nINNER JOIN lr_Khasra b \n    ON a.LocationCode = b.LocationCode AND a.KhatiyanNo = b.KhatiyanNo\nINNER JOIN c_lr_Location d \n    ON a.LocationCode = d.LocationCode\nWHERE (b.Mflag IS NULL OR b.Mflag = 'N') AND a.LocationCode IN (...);\n```";
         }
@@ -486,7 +483,7 @@ if (message.includes('govt lands') || message.includes('government lands') || me
             return "👁️ **Query to View Records:**\n\n```sql\nSELECT *\nFROM lr_Khatiyan a \nINNER JOIN lr_Khasra b \n    ON a.LocationCode = b.LocationCode AND a.KhatiyanNo = b.KhatiyanNo\nINNER JOIN c_lr_Location d \n    ON a.LocationCode = d.LocationCode\nWHERE (b.Mflag IS NULL OR b.Mflag = 'N');\n```\n\n*Note: Add your specific WHERE conditions at the end*";
         }
         
-        if (message.includes('lgd code') || message.includes('lgd')) {
+        if (message.includes('lgd code') || (message.includes('records') && message.includes('lgd'))) {
             return "🏷️ **Query to View Records with LGD Code:**\n\n```sql\nSELECT *\nFROM lr_Khatiyan a \nINNER JOIN lr_Khasra b \n    ON a.LocationCode = b.LocationCode AND a.KhatiyanNo = b.KhatiyanNo\nINNER JOIN c_lr_Location d \n    ON a.LocationCode = d.LocationCode\nINNER JOIN SC_LGD_MASTER lgd\n    ON a.LocationCode = lgd.LocationCode\nWHERE (b.Mflag IS NULL OR b.Mflag = 'N');\n```";
         }
         
@@ -494,9 +491,9 @@ if (message.includes('govt lands') || message.includes('government lands') || me
             return "👥 **Query for Single/Joint Ownership:**\n\n```sql\nSELECT \n    a.OwnerName,\n    CASE \n        WHEN \n            a.OwnerName LIKE '%,%' OR \n            a.OwnerName LIKE '% र %' OR \n            a.OwnerName LIKE '% अनि %' OR \n            a.OwnerName LIKE '% तथा %' OR \n            a.OwnerName LIKE '%/%' OR \n            a.OwnerName LIKE '% संग %' OR \n            a.OwnerName LIKE '% एवं %'\n        THEN 'Joint'\n        ELSE 'Single'\n    END AS OwnershipType\nFROM lr_Khatiyan a\nINNER JOIN lr_Khasra b \n    ON a.LocationCode = b.LocationCode AND a.KhatiyanNo = b.KhatiyanNo\nWHERE (b.Mflag IS NULL OR b.Mflag = 'N');\n```";
         }
         
-      if (message.includes('single') && message.includes('joint') && message.includes('count')) {
-    return "📊 **Query for Single/Joint Count:**\n\n```sql\nSELECT \n    d.LocationName,\n    SUM(CASE \n        WHEN \n            a.OwnerName LIKE '%,%' OR \n            a.OwnerName LIKE '% र %' OR \n            a.OwnerName LIKE '% अनि %' OR \n            a.OwnerName LIKE '% तथा %' OR \n            a.OwnerName LIKE '%/%' OR \n            a.OwnerName LIKE '% संग %' OR \n            a.OwnerName LIKE '% एवं %'\n        THEN 1 \n        ELSE 0 \n    END) AS JointOwners,\n    COUNT(DISTINCT a.KhatiyanNo) AS TotalOwners\nFROM lr_Khatiyan a\nINNER JOIN lr_Khasra b \n    ON a.LocationCode = b.LocationCode AND a.KhatiyanNo = b.KhatiyanNo\nINNER JOIN c_lr_Location d \n    ON a.LocationCode = d.LocationCode\nWHERE (b.Mflag IS NULL OR b.Mflag = 'N') \n  AND a.LocationCode LIKE '2%'\nGROUP BY d.LocationName\nORDER BY d.LocationName;\n```";
-}
+        if (message.includes('single') && message.includes('joint') && message.includes('count')) {
+            return "📊 **Query for Single/Joint Count:**\n\n```sql\nSELECT \n    d.LocationName,\n    SUM(CASE \n        WHEN \n            a.OwnerName LIKE '%,%' OR \n            a.OwnerName LIKE '% र %' OR \n            a.OwnerName LIKE '% अनि %' OR \n            a.OwnerName LIKE '% तथा %' OR \n            a.OwnerName LIKE '%/%' OR \n            a.OwnerName LIKE '% संग %' OR \n            a.OwnerName LIKE '% एवं %'\n        THEN 1 \n        ELSE 0 \n    END) AS JointOwners,\n    COUNT(DISTINCT a.KhatiyanNo) AS TotalOwners\nFROM lr_Khatiyan a\nINNER JOIN lr_Khasra b \n    ON a.LocationCode = b.LocationCode AND a.KhatiyanNo = b.KhatiyanNo\nINNER JOIN c_lr_Location d \n    ON a.LocationCode = d.LocationCode\nWHERE (b.Mflag IS NULL OR b.Mflag = 'N') \n  AND a.LocationCode LIKE '2%'\nGROUP BY d.LocationName\nORDER BY d.LocationName;\n```";
+        }
         
         if (message.includes('top 10') && message.includes('less plots')) {
             return "📉 **Query for Top 10 Blocks with Least Plots:**\n\n```sql\nSELECT \n    a.LocationCode,\n    d.LocationName,\n    COUNT(DISTINCT b.KhasraNumber) AS KhasraCount\nFROM lr_Khatiyan a\nINNER JOIN lr_Khasra b \n    ON a.LocationCode = b.LocationCode AND a.KhatiyanNo = b.KhatiyanNo\nINNER JOIN c_lr_Location d \n    ON a.LocationCode = d.LocationCode\nWHERE (b.Mflag IS NULL OR b.Mflag = 'N')\nGROUP BY a.LocationCode, d.LocationName\nORDER BY KhasraCount ASC\nOFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY;\n```";
@@ -540,85 +537,81 @@ if (message.includes('govt lands') || message.includes('government lands') || me
             return "👥 **Query for Gender-wise Plots:**\n\n```sql\nSELECT \n    CASE \n        WHEN d.LocationCode LIKE '1%' THEN '1%'\n        WHEN d.LocationCode LIKE '2%' THEN '2%'\n        WHEN d.LocationCode LIKE '3%' THEN '3%'\n        WHEN d.LocationCode LIKE '4%' THEN '4%'\n        WHEN d.LocationCode LIKE '5%' THEN '5%'\n        WHEN d.LocationCode LIKE '6%' THEN '6%'\n        ELSE 'Other'\n    END AS location_start,\n    a.gender,\n    COUNT(DISTINCT a.KhatiyanNo) AS count\nFROM lr_Khatiyan a \nINNER JOIN lr_Khasra b \n    ON a.LocationCode = b.LocationCode AND a.KhatiyanNo = b.KhatiyanNo\nINNER JOIN c_lr_Location d \n    ON a.LocationCode = d.LocationCode\nWHERE (b.Mflag IS NULL OR b.Mflag = 'N') \nGROUP BY \n    CASE \n        WHEN d.LocationCode LIKE '1%' THEN '1%'\n        WHEN d.LocationCode LIKE '2%' THEN '2%'\n        WHEN d.LocationCode LIKE '3%' THEN '3%'\n        WHEN d.LocationCode LIKE '4%' THEN '4%'\n        WHEN d.LocationCode LIKE '5%' THEN '5%'\n        WHEN d.LocationCode LIKE '6%' THEN '6%'\n        ELSE 'Other'\n    END,\n    a.gender\nORDER BY location_start, a.gender;\n```";
         }
 
-      // ==================== TOTAL AREA QUERIES ====================
-if (message.includes('total area') || (message.includes('sum') && message.includes('area'))) {
-    return "📐 **Total Area Queries**\n\n" +
-           "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
-           "**📌 QUERY 1: Area of Entire State (District-wise)**\n" +
-           "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
-           "```sql\n" +
-           "SELECT \n" +
-           "    d.LocationName,\n" +
-           "    COUNT(DISTINCT b.KhasraNumber) AS TotalPlots,\n" +
-           "    SUM(b.TotArea) AS TotalArea\n" +
-           "FROM lr_Khatiyan a\n" +
-           "INNER JOIN lr_Khasra b \n" +
-           "    ON a.LocationCode = b.LocationCode \n" +
-           "    AND a.KhatiyanNo = b.KhatiyanNo\n" +
-           "INNER JOIN c_lr_Location d\n" +
-           "    ON a.LocationCode = d.LocationCode\n" +
-           "WHERE (b.Mflag IS NULL OR b.Mflag = 'N')\n" +
-           "GROUP BY d.LocationName\n" +
-           "ORDER BY d.LocationName;\n" +
-           "```\n\n" +
-           "**📊 Output:** Location-wise breakdown of total plots and total area\n\n" +
-           "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
-           "**📌 QUERY 2: Area of a Specific Village**\n" +
-           "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
-           "```sql\n" +
-           "SELECT SUM(kh.TotArea) AS TotalArea\n" +
-           "FROM dbo.lr_Khasra AS kh\n" +
-           "INNER JOIN dbo.lr_Khatiyan AS kt \n" +
-           "    ON kh.KhatiyanNo = kt.KhatiyanNo\n" +
-           "    AND kh.LocationCode = kt.LocationCode\n" +
-           "WHERE kt.LocationCode LIKE '510101';\n" +
-           "```\n\n" +
-           "**📍 How to Use Village Query:**\n" +
-           "• Replace `'510101'` with your actual village LocationCode\n" +
-           "• Use `LIKE '510101'` for exact match\n" +
-           "• Use `LIKE '5101%'` for all villages under a block\n" +
-           "• Use `LIKE '51%'` for all villages under a district\n\n" +
-           "**💡 Notes:**\n" +
-           "• Both queries exclude deleted/flagged records (Mflag IS NULL OR Mflag = 'N')\n" +
-           "• Query 1 groups data by LocationName (District/Block/Village level)\n" +
-           "• Query 2 returns total area for a specific village code\n" +
-           "• Ensure LocationCode format matches your database schema";
-}
+        // ==================== TOTAL AREA QUERIES ====================
+        if (message.includes('total area') || (message.includes('sum') && message.includes('area'))) {
+            return "📐 **Total Area Queries**\n\n" +
+                   "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
+                   "**📌 QUERY 1: Area of Entire State (District-wise)**\n" +
+                   "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
+                   "```sql\n" +
+                   "SELECT \n" +
+                   "    d.LocationName,\n" +
+                   "    COUNT(DISTINCT b.KhasraNumber) AS TotalPlots,\n" +
+                   "    SUM(b.TotArea) AS TotalArea\n" +
+                   "FROM lr_Khatiyan a\n" +
+                   "INNER JOIN lr_Khasra b \n" +
+                   "    ON a.LocationCode = b.LocationCode \n" +
+                   "    AND a.KhatiyanNo = b.KhatiyanNo\n" +
+                   "INNER JOIN c_lr_Location d\n" +
+                   "    ON a.LocationCode = d.LocationCode\n" +
+                   "WHERE (b.Mflag IS NULL OR b.Mflag = 'N')\n" +
+                   "GROUP BY d.LocationName\n" +
+                   "ORDER BY d.LocationName;\n" +
+                   "```\n\n" +
+                   "**📊 Output:** Location-wise breakdown of total plots and total area\n\n" +
+                   "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
+                   "**📌 QUERY 2: Area of a Specific Village**\n" +
+                   "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
+                   "```sql\n" +
+                   "SELECT SUM(kh.TotArea) AS TotalArea\n" +
+                   "FROM dbo.lr_Khasra AS kh\n" +
+                   "INNER JOIN dbo.lr_Khatiyan AS kt \n" +
+                   "    ON kh.KhatiyanNo = kt.KhatiyanNo\n" +
+                   "    AND kh.LocationCode = kt.LocationCode\n" +
+                   "WHERE kt.LocationCode LIKE '510101';\n" +
+                   "```\n\n" +
+                   "**📍 How to Use Village Query:**\n" +
+                   "• Replace `'510101'` with your actual village LocationCode\n" +
+                   "• Use `LIKE '510101'` for exact match\n" +
+                   "• Use `LIKE '5101%'` for all villages under a block\n" +
+                   "• Use `LIKE '51%'` for all villages under a district\n\n" +
+                   "**💡 Notes:**\n" +
+                   "• Both queries exclude deleted/flagged records (Mflag IS NULL OR Mflag = 'N')\n" +
+                   "• Query 1 groups data by LocationName (District/Block/Village level)\n" +
+                   "• Query 2 returns total area for a specific village code\n" +
+                   "• Ensure LocationCode format matches your database schema";
+        }
 
         if (message.includes('sdc')) {
             return "🔐 **SDC Server Details:**\n\n• Node Internal IP: `10.182.95.136`\n• Node External IP: `164.100.126.44`\n• Server Name: `WEB-9/SSDC`\n• Server Password: `$$web9@12345$#`";
         }
 
+        // ==================== SCRIPTS ====================
 
-        //--------- Scripts ---------------------
-
-// ==================== PYTHON SCRIPT TO COUNT FEATURES ====================
-if (message.includes('python script to count feature') || message.includes('count features python') || message.includes('qgs feature count') || message.includes('featureCount python')) {
-    return "🐍 **Python Script to Count Features in QGIS:**\n\n" +
-           "```python\n" +
-           "print(sum(l.featureCount() for l in QgsProject.instance().mapLayers().values() if l.type() == QgsMapLayer.VectorLayer))\n" +
-           "```\n\n" +
-           
-           "**📊 Output:** Total number of features across all vector layers in your current QGIS project";
-}
-
+        // ==================== PYTHON SCRIPT TO COUNT FEATURES ====================
+        if (message.includes('python script to count feature') || message.includes('count features python') || message.includes('qgs feature count') || message.includes('featureCount python')) {
+            return "🐍 **Python Script to Count Features in QGIS:**\n\n" +
+                   "```python\n" +
+                   "print(sum(l.featureCount() for l in QgsProject.instance().mapLayers().values() if l.type() == QgsMapLayer.VectorLayer))\n" +
+                   "```\n\n" +
+                   "**📊 Output:** Total number of features across all vector layers in your current QGIS project";
+        }
 
         // ==================== SHELL SCRIPT FOR MAINSERVER CSV ====================
-if (message.includes('shell script for mainserver csv') || message.includes('mainserver csv') || message.includes('farmerid csv') || message.includes('bcp script')) {
-    return "📁 **Shell Script for Mainserver CSV Export:**\n\n```batch\necho state_code,district_code,sub_district_code,village_code,Land_Usage_Type,Land_Ownership,State_land_unique_code,Survey_Number,khata_no,farm_land_plotid,state_land_owner_number,state_land_main_owner_number,owner_name_local,identifier_name_local,indentifier_type,mutation_date,mutation_type,area_of_parcel_Integer_Part,area_of_parcel_Decimal_Part,area_of_parcel_unit,ownership_type,Owner_Aadhaar_as_per_RoR,Government_Liabilities,Public_Liabilities,Land_Type,Owner_PAN_as_per_RoR,gataseqno,flp_owner_no > D:\\farmerid_header.csv && bcp \"SELECT state_code,district_code,sub_district_code,village_code,Land_Usage_Type,Land_Ownership,State_land_unique_code,Survey_Number,khata_no,farm_land_plotid,state_land_owner_number,state_land_main_owner_number,owner_name_local,identifier_name_local,indentifier_type,mutation_date,mutation_type,area_of_parcel_Integer_Part,area_of_parcel_Decimal_Part,area_of_parcel_unit,ownership_type,Owner_Aadhaar_as_per_RoR,Government_Liabilities,Public_Liabilities,Land_Type,Owner_PAN_as_per_RoR,gataseqno,flp_owner_no FROM ILRMS_MAIN.dbo.Farmerid\" queryout \"D:\\farmerid_data.csv\" ILRMS-DB -T -c -t, -C 65001 && copy /b D:\\farmerid_header.csv + D:\\farmerid_data.csv D:\\farmerid.csv && del D:\\farmerid_header.csv D:\\farmerid_data.csv && echo Done! CSV saved to D:\\farmerid.csv\n```\n\n**📋 Script Breakdown:**\n1. Creates header CSV with column names\n2. Exports data from Farmerid table using BCP\n3. Combines header + data into final CSV\n4. Deletes temporary files\n5. Confirms completion";
-}
+        if (message.includes('shell script for mainserver csv') || message.includes('mainserver csv') || message.includes('farmerid csv') || message.includes('bcp script')) {
+            return "📁 **Shell Script for Mainserver CSV Export:**\n\n```batch\necho state_code,district_code,sub_district_code,village_code,Land_Usage_Type,Land_Ownership,State_land_unique_code,Survey_Number,khata_no,farm_land_plotid,state_land_owner_number,state_land_main_owner_number,owner_name_local,identifier_name_local,indentifier_type,mutation_date,mutation_type,area_of_parcel_Integer_Part,area_of_parcel_Decimal_Part,area_of_parcel_unit,ownership_type,Owner_Aadhaar_as_per_RoR,Government_Liabilities,Public_Liabilities,Land_Type,Owner_PAN_as_per_RoR,gataseqno,flp_owner_no > D:\\farmerid_header.csv && bcp \"SELECT state_code,district_code,sub_district_code,village_code,Land_Usage_Type,Land_Ownership,State_land_unique_code,Survey_Number,khata_no,farm_land_plotid,state_land_owner_number,state_land_main_owner_number,owner_name_local,identifier_name_local,indentifier_type,mutation_date,mutation_type,area_of_parcel_Integer_Part,area_of_parcel_Decimal_Part,area_of_parcel_unit,ownership_type,Owner_Aadhaar_as_per_RoR,Government_Liabilities,Public_Liabilities,Land_Type,Owner_PAN_as_per_RoR,gataseqno,flp_owner_no FROM ILRMS_MAIN.dbo.Farmerid\" queryout \"D:\\farmerid_data.csv\" ILRMS-DB -T -c -t, -C 65001 && copy /b D:\\farmerid_header.csv + D:\\farmerid_data.csv D:\\farmerid.csv && del D:\\farmerid_header.csv D:\\farmerid_data.csv && echo Done! CSV saved to D:\\farmerid.csv\n```\n\n**📋 Script Breakdown:**\n1. Creates header CSV with column names\n2. Exports data from Farmerid table using BCP\n3. Combines header + data into final CSV\n4. Deletes temporary files\n5. Confirms completion";
+        }
 
         // ==================== SHELL SCRIPT FOR BHUNAKSHA SERVER CSV ====================
-if (message.includes('shell script for bhunakshaserver csv') || message.includes('bhunakshaserver csv') || message.includes('shakti csv') || message.includes('bhunaksha csv')) {
-    return "📁 **PowerShell Script for Bhunaksha Server CSV Export:**\n\n```powershell\n$c=New-Object System.Data.SqlClient.SqlConnection('Server=SRC434036F71;Database=ILRMS;Integrated Security=True;TrustServerCertificate=True;');$c.Open();$cmd=$c.CreateCommand();$cmd.CommandText='SELECT state_code,district_code,sub_district_code,village_code,Land_Usage_Type,Land_Ownership,State_land_unique_code,Survey_Number,khata_no,farm_land_plotid,state_land_owner_number,state_land_main_owner_number,owner_name_local,identifier_name_local,indentifier_type,mutation_date,mutation_type,area_of_parcel_Integer_Part,area_of_parcel_Decimal_Part,area_of_parcel_unit,ownership_type,Owner_Aadhaar_as_per_RoR,Government_Liabilities,Public_Liabilities,Land_Type,Owner_PAN_as_per_RoR,gataseqno,flp_owner_no,owner_suffix FROM Shakti';$r=$cmd.ExecuteReader();$dt=New-Object System.Data.DataTable;$dt.Load($r);$c.Close();$dt | Export-Csv 'E:\\shakti.csv' -NoTypeInformation -Encoding UTF8;Write-Host 'Done! CSV exported to E:\\shakti.csv with UTF-8 (Devanagari preserved!)'\n```\n\n**📋 Script Details:**\n• Database: ILRMS on Server SRC434036F71\n• Table: Shakti\n• Output: E:\\shakti.csv\n• Encoding: UTF-8 (Preserves Devanagari/Nepali text)\n• Includes owner_suffix column\n\n**💡 How to Run:**\n1. Open PowerShell as Administrator\n2. Copy and paste the script\n3. Press Enter to execute";
-}
+        if (message.includes('shell script for bhunakshaserver csv') || message.includes('bhunakshaserver csv') || message.includes('shakti csv') || message.includes('bhunaksha csv')) {
+            return "📁 **PowerShell Script for Bhunaksha Server CSV Export:**\n\n```powershell\n$c=New-Object System.Data.SqlClient.SqlConnection('Server=SRC434036F71;Database=ILRMS;Integrated Security=True;TrustServerCertificate=True;');$c.Open();$cmd=$c.CreateCommand();$cmd.CommandText='SELECT state_code,district_code,sub_district_code,village_code,Land_Usage_Type,Land_Ownership,State_land_unique_code,Survey_Number,khata_no,farm_land_plotid,state_land_owner_number,state_land_main_owner_number,owner_name_local,identifier_name_local,indentifier_type,mutation_date,mutation_type,area_of_parcel_Integer_Part,area_of_parcel_Decimal_Part,area_of_parcel_unit,ownership_type,Owner_Aadhaar_as_per_RoR,Government_Liabilities,Public_Liabilities,Land_Type,Owner_PAN_as_per_RoR,gataseqno,flp_owner_no,owner_suffix FROM Shakti';$r=$cmd.ExecuteReader();$dt=New-Object System.Data.DataTable;$dt.Load($r);$c.Close();$dt | Export-Csv 'E:\\shakti.csv' -NoTypeInformation -Encoding UTF8;Write-Host 'Done! CSV exported to E:\\shakti.csv with UTF-8 (Devanagari preserved!)'\n```\n\n**📋 Script Details:**\n• Database: ILRMS on Server SRC434036F71\n• Table: Shakti\n• Output: E:\\shakti.csv\n• Encoding: UTF-8 (Preserves Devanagari/Nepali text)\n• Includes owner_suffix column\n\n**💡 How to Run:**\n1. Open PowerShell as Administrator\n2. Copy and paste the script\n3. Press Enter to execute";
+        }
 
-        
         // ==================== PASSWORDS ====================
 
         if (message.includes('ilrms credential') || message.includes('ilrms password')) {
-    return "🔐 Username: dilrmp-admin \n Password: Pass@123$";
-}
+            return "🔐 Username: dilrmp-admin \n Password: Pass@123$";
+        }
         
         if (message.includes('black') && (message.includes('pc') || message.includes('computer'))) {
             return "🔐 Black PC Password: **1982**";
@@ -644,7 +637,7 @@ if (message.includes('shell script for bhunakshaserver csv') || message.includes
             return "🔐 Office Laptop Password: **chung@tshering**";
         }
 
-        if (message.includes('dilrmp gmail account') ) {
+        if (message.includes('dilrmp account') || (message.includes('dilrmp') && message.includes('password'))) {
             return "🔐 DILRMP Account Password: **revenueland@123**";
         }
 
@@ -664,11 +657,10 @@ if (message.includes('shell script for bhunakshaserver csv') || message.includes
             return "🔐 DILRMP Hathway WiFi Password: **$0725Dilrmp**";
         }
 
-
         // ==================== GOVT ID PASSWORD ====================
-if (message.includes('govt id') || message.includes('govt id password') || message.includes('government id password') || message.includes('govt email')) {
-    return "🔐 **Government ID Login Credentials:**\n\n• Email: office.dilrmp@sikkim.gov.in\n• Password: 5riju@Xcom";
-}
+        if (message.includes('govt id') || message.includes('govt id password') || message.includes('government id password') || message.includes('govt email')) {
+            return "🔐 **Government ID Login Credentials:**\n\n• Email: office.dilrmp@sikkim.gov.in\n• Password: 5riju@Xcom";
+        }
         
         // ==================== DEFAULT RESPONSES ====================
         if (message.includes('hello') || message.includes('hi') || message.includes('hey')) {
@@ -736,4 +728,3 @@ if (message.includes('govt id') || message.includes('govt id password') || messa
 document.addEventListener('DOMContentLoaded', () => {
     new XtronChat();
 });
-
