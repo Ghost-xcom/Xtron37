@@ -26,7 +26,8 @@ class XtronChat {
                 "Single Khasra Khatiyan": "query to get find all khatiyan that are linked to exactly one unique khasra",
                 "Gender-wise Plots": "query to get genderwise plots",
                 "Total Area": "Query for Total Area",
-                "DCS relevant query": "query to get dec relevant data"
+                "DCS relevant query": "query to get dec relevant data",
+                "Intact mother plots":"query for intact plots"
             },
             "Tools": {
                 "Excel Ownership Formula": "excel formula single or joint",
@@ -319,6 +320,12 @@ class XtronChat {
                    "• The query excludes mutated plots (those with '/' in KhasraNumber)\n" +
                    "• Use the extracted coordinates for mapping or further analysis";
         }
+
+        //-----------Intact motherplots for DCS------------------------------
+
+        if (message.includes('intact plots') || message.includes('intact plots for dcs') || message.includes('find intact plots')) {
+    return "📊 **Query for Intact Plots (DCS):**\n\n```sql\nWITH AllPlots AS (\n    SELECT \n        OwnerName,\n        FathersName,\n        KhatiyanNo,\n        KhasraNumber,\n        TotArea,\n        LocationCode,\n        LocationName,\n        village_code\n    FROM DCS\n),\nMutatedPlots AS (\n    SELECT \n        KhasraNumber,\n        village_code,\n        CASE \n            WHEN KhasraNumber LIKE '%/%' \n            THEN LEFT(KhasraNumber, CHARINDEX('/', KhasraNumber) - 1)\n            ELSE NULL\n        END as MotherNumber\n    FROM AllPlots\n    WHERE KhasraNumber LIKE '%/%'\n),\nBrokenMothers AS (\n    SELECT DISTINCT\n        MotherNumber as BrokenKhasra,\n        village_code\n    FROM MutatedPlots\n    WHERE MotherNumber IS NOT NULL\n)\nSELECT \n    ap.OwnerName,\n    ap.FathersName,\n    ap.KhatiyanNo,\n    ap.KhasraNumber,\n    ap.TotArea,\n    ap.LocationCode,\n    ap.LocationName,\n    ap.village_code,\n    'INTACT_MOTHER' as PlotStatus\nFROM AllPlots ap\nWHERE ap.KhasraNumber NOT LIKE '%/%'\n  AND ap.village_code = '260927'\n  AND ap.KhasraNumber NOT IN (\n        SELECT BrokenKhasra \n        FROM BrokenMothers \n        WHERE village_code = ap.village_code\n    )\nORDER BY TRY_CAST(ap.KhasraNumber AS INT);\n```\n\n**Alternate Query:**\n\n```sql\nWITH AllPlots AS (\n    SELECT \n        OwnerName,\n        FathersName,\n        KhatiyanNo,\n        KhasraNumber,\n        TotArea,\n        LocationCode,\n        LocationName,\n        village_code\n    FROM DCS\n),\nMutatedPlots AS (\n    SELECT \n        KhasraNumber,\n        village_code,\n        CASE \n            WHEN KhasraNumber LIKE '%/%' \n            THEN LEFT(KhasraNumber, CHARINDEX('/', KhasraNumber) - 1)\n            ELSE NULL\n        END as MotherNumber\n    FROM AllPlots\n    WHERE KhasraNumber LIKE '%/%'\n),\nBrokenMothers AS (\n    SELECT DISTINCT\n        MotherNumber as BrokenKhasra,\n        village_code\n    FROM MutatedPlots\n    WHERE MotherNumber IS NOT NULL\n)\nSELECT \n    ap.OwnerName,\n    ap.FathersName,\n    ap.KhatiyanNo,\n    ap.KhasraNumber,\n    ap.TotArea,\n    ap.LocationCode,\n    ap.LocationName,\n    ap.village_code,\n    'INTACT_MOTHER' as PlotStatus\nFROM AllPlots ap\nWHERE ap.KhasraNumber NOT LIKE '%/%'\n  AND ap.village_code = '260970'\n  AND ap.KhasraNumber NOT IN (\n        SELECT BrokenKhasra \n        FROM BrokenMothers \n        WHERE village_code = ap.village_code\n    )\nORDER BY CAST(ap.KhasraNumber AS INT);\n```";
+}
 
         // ==================== AADHAR RECORDS QUERY ====================
         if (message.includes('aadhar records') || message.includes('aadhar query') || message.includes('query for aadhar')) {
