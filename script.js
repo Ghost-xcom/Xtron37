@@ -27,7 +27,9 @@ class XtronChat {
                 "Gender-wise Plots": "query to get genderwise plots",
                 "Total Area": "Query for Total Area",
                 "DCS relevant query": "query to get dec relevant data",
-                "Intact mother plots":"query for intact plots"
+                "Intact mother plots": "query for intact plots",
+                "Broken mother plots": "find broken mother plots"
+            
             },
             "Tools": {
                 "Excel Ownership Formula": "excel formula single or joint",
@@ -40,7 +42,8 @@ class XtronChat {
             "Scripts": {
                 "Count features of all the shapefiles": "python script to count feature",
                 "Main server table to CSV": "shell script for Mainserver CSV",
-                "Bhunaksha server table to CSV": "shell script for Bhunakshaserver CSV"
+                "Bhunaksha server table to CSV": "shell script for Bhunakshaserver CSV",
+                "CSV automater": "python code for csv automater"
             }
         };
         
@@ -589,10 +592,19 @@ class XtronChat {
                    "• Ensure LocationCode format matches your database schema";
         }
 
+        
+
         if (message.includes('sdc')) {
             return "🔐 **SDC Server Details:**\n\n• Node Internal IP: `10.182.95.136`\n• Node External IP: `164.100.126.44`\n• Server Name: `WEB-9/SSDC`\n• Server Password: `$$web9@12345$#`";
         }
 
+
+// ==================== QUERY TO FIND BROKEN MOTHER PLOTS ====================
+if (message.includes('broken mother plots') || message.includes('broken mothers') || message.includes('find broken mother plots') || message.includes('query for broken mother')) {
+    return "📊 **Query to Find Broken Mother Plots:**\n\n```sql\nWITH AllPlots AS (\n    SELECT \n        OwnerName,\n        FathersName,\n        KhatiyanNo,\n        KhasraNumber,\n        TotArea,\n        LocationCode,\n        LocationName,\n        village_code\n    FROM DCS\n),\n-- Step 1: Identify mutated plots (those with '/')\nMutatedPlots AS (\n    SELECT \n        KhasraNumber,\n        LocationCode,  -- Added LocationCode for joining\n        CASE \n            WHEN KhasraNumber LIKE '%/%' \n            THEN LEFT(KhasraNumber, CHARINDEX('/', KhasraNumber) - 1)\n            ELSE NULL\n        END as MotherNumber\n    FROM AllPlots\n    WHERE KhasraNumber LIKE '%/%'\n),\n-- Step 2: Get all mother numbers that have been broken (grouped by LocationCode)\nBrokenMothers AS (\n    SELECT DISTINCT\n        MotherNumber as BrokenKhasra,\n        LocationCode  -- Use LocationCode instead of village_code\n    FROM MutatedPlots\n    WHERE MotherNumber IS NOT NULL\n)\n-- FINAL: Get ONLY broken mother plots\nSELECT \n    ap.OwnerName,\n    ap.FathersName,\n    ap.KhatiyanNo,\n    ap.KhasraNumber,\n    ap.TotArea,\n    ap.LocationCode,\n    ap.LocationName,\n    ap.village_code,\n    'BROKEN_MOTHER' as PlotStatus\nFROM AllPlots ap\nWHERE ap.KhasraNumber NOT LIKE '%/%'  -- Mother plots only (no '/')\n  AND ap.LocationCode = '260953'      -- Filter by LocationCode instead\n  AND ap.KhasraNumber IN (            -- Include ONLY broken mothers\n        SELECT BrokenKhasra \n        FROM BrokenMothers bm\n        WHERE bm.LocationCode = ap.LocationCode  -- Join on LocationCode\n    )\nORDER BY TRY_CAST(ap.KhasraNumber AS INT);\n```";
+}
+
+        
         // ==================== SCRIPTS ====================
 
         // ==================== PYTHON SCRIPT TO COUNT FEATURES ====================
@@ -603,6 +615,12 @@ class XtronChat {
                    "```\n\n" +
                    "**📊 Output:** Total number of features across all vector layers in your current QGIS project";
         }
+
+
+        // ==================== PYTHON CODE FOR CSV AUTOMATER ====================
+if (message.includes('python code for csv automater') || message.includes('csv automater') || message.includes('csv automator') || message.includes('export csv qgis')) {
+    return "🐍 **Python Code for CSV Automater (QGIS):**\n\n```python\nimport os\nfrom qgis.core import QgsVectorFileWriter, QgsProject, QgsMapLayer\n\noutput_folder = r\"E:\\CSVonly\"\nos.makedirs(output_folder, exist_ok=True)\n\nvector_layers = [l for l in QgsProject.instance().mapLayers().values() if l.type() == QgsMapLayer.VectorLayer]\n\nfor layer in vector_layers:\n    layer_name = layer.name()\n    # Remove invalid characters for filename\n    for char in '<>:\"/\\\\|?*':\n        layer_name = layer_name.replace(char, '_')\n    \n    output_file = os.path.join(output_folder, f\"{layer_name}.csv\")\n    \n    options = QgsVectorFileWriter.SaveVectorOptions()\n    options.driverName = \"CSV\"\n    options.fileEncoding = \"UTF-8\"\n    options.onlySelected = False\n    options.actionOnExistingFile = QgsVectorFileWriter.CreateOrOverwriteFile\n    options.layerOptions = [\n        \"CREATE_CSVT=NO\",\n        \"GEOMETRY=AS_WKT\",\n        \"LINEFORMAT=<Default>\",\n        \"SEPARATOR=COMMA\",\n        \"STRING_QUOTING=IF_AMBIGUOUS\",\n        \"WRITE_BOM=NO\"\n    ]\n    \n    error = QgsVectorFileWriter.writeAsVectorFormatV3(layer, output_file, QgsProject.instance().transformContext(), options)\n    \n    if error[0] == QgsVectorFileWriter.NoError:\n        print(f\"✓ Exported: {layer.name()} -> {output_file}\")\n        iface.addVectorLayer(output_file, layer.name(), \"ogr\")\n    else:\n        print(f\"✗ Error exporting {layer.name()}: {error[1]}\")\n\nprint(f\"\\n✅ All layers exported to: {output_folder}\")\n```\n\n**📋 What this script does:**\n• Exports all vector layers in your QGIS project to CSV format\n• Saves to E:\\CSVonly folder (creates if doesn't exist)\n• Includes geometry as WKT (Well-Known Text) in the CSV\n• Handles invalid filename characters automatically\n• Overwrites existing files\n• Loads the exported CSV back into QGIS as a layer\n• Uses UTF-8 encoding\n\n**💡 How to Use:**\n1. Open QGIS Python Console (Plugins → Python Console or Ctrl+Alt+P)\n2. Copy and paste the script\n3. Change `output_folder` path if needed\n4. Press Enter to run";
+}
 
         // ==================== SHELL SCRIPT FOR MAINSERVER CSV ====================
         if (message.includes('shell script for mainserver csv') || message.includes('mainserver csv') || message.includes('farmerid csv') || message.includes('bcp script')) {
