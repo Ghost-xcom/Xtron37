@@ -11,6 +11,7 @@ class XtronChat {
             "Database Queries": {
                 "Number of ROR": "query for number of ror",
                 "Number of Plots": "query for number of plots", 
+                "Table Schema": "query for table schema",
                 "Govt Lands": "query for Govt Lands", 
                 "View Records": "query to view records",
                 "Records with LGD": "query to get lgd code",
@@ -480,6 +481,12 @@ class XtronChat {
         if (message.includes('govt lands') || message.includes('government lands') || message.includes('govt land query')) {
             return "🏛️ **Government Lands Acquisition Query:**\n\n```sql\nSELECT  \n    PO.OrganizationName AS Buyer,\n    PP.CasteCode,\n    LA.PurposeofAcquisition,\n    PPA.MutationDate,\n    LCD.ChequeAmount,\n    LCD.ChequeNumber,\n    PR.ConsiderationValue AS SaleValue\nFROM la_Land_Acquisition LA\nLEFT JOIN pa_PropertyApplication PPA\n    ON LA.PropertyApplicationNo = PPA.PropertyApplicationNo\nLEFT JOIN pr_PropertyRegistration PR\n    ON PPA.PropertyApplicationNo = PR.PropertyApplicationNo\nLEFT JOIN pa_Party PP\n    ON PPA.PropertyApplicationNo = PP.PropertyApplicationNo\nLEFT JOIN pa_Organization PO\n    ON PP.PartyNo = PO.PartyNo\nLEFT JOIN la_chequedetail LCD\n    ON LA.LandAcquisitionNo = LCD.LandAcquisitionNo\nWHERE PP.CasteCode = '1203';\n```\n\n**📋 Query Details:**\n• Filters lands acquired by Government (CasteCode '1203')\n• Shows buyer organization name\n• Displays acquisition purpose and mutation date\n• Includes payment details (cheque amount, cheque number)\n• Shows sale consideration value\n\n**💡 Note:** CasteCode '1203' represents Government lands acquisition";
         }
+
+
+        // ==================== QUERY FOR TABLE SCHEMA ====================
+if (message.includes('table schema') || message.includes('query for table schema') || message.includes('schema query') || message.includes('information_schema')) {
+    return "📋 **Query for Table Schema:**\n\n```sql\nSELECT \n    COLUMN_NAME,\n    DATA_TYPE,\n    CHARACTER_MAXIMUM_LENGTH,\n    IS_NULLABLE,\n    NUMERIC_PRECISION,\n    NUMERIC_SCALE\nFROM INFORMATION_SCHEMA.COLUMNS\nWHERE TABLE_NAME = 'ur table name'\nORDER BY ORDINAL_POSITION;\n```\n\n**📋 Query Details:**\n• Displays all columns of a table with their properties\n• Shows column name, data type, max length, nullability, and numeric precision/scale\n• Replace `'ur table name'` with your actual table name\n\n**💡 Example:**\n```sql\nSELECT \n    COLUMN_NAME,\n    DATA_TYPE,\n    CHARACTER_MAXIMUM_LENGTH,\n    IS_NULLABLE,\n    NUMERIC_PRECISION,\n    NUMERIC_SCALE\nFROM INFORMATION_SCHEMA.COLUMNS\nWHERE TABLE_NAME = 'lr_Khatiyan'\nORDER BY ORDINAL_POSITION;\n```";
+}
 
        if (message.includes('dcs') || (message.includes('dec') && message.includes('relevant'))) {
     return "📊 **Query for DCS Data Extraction:**\n\n```sql\nSELECT\n    a.OwnerName, a.FathersName, a.KhatiyanNo, b.KhasraNumber, b.TotArea, a.LocationCode, d.LocationName\nFROM lr_Khatiyan a \nINNER JOIN lr_Khasra b \n    ON a.LocationCode = b.LocationCode AND a.KhatiyanNo = b.KhatiyanNo\nINNER JOIN c_lr_Location d \n    ON a.LocationCode = d.LocationCode\nWHERE (b.Mflag IS NULL OR b.Mflag = 'N') AND a.LocationCode IN ();\n```";
