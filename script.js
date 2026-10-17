@@ -265,8 +265,17 @@ class XtronChat {
         }
 
         if ((message.includes('api') || message.includes('farmer registry')) && !message.includes('query')) {
-            return "🔐 API Links:\n• Farmer Registry: http://164.100.126.44/api/farmer\n• GRVMR: http://164.100.126.44/api/grvmr";
-        }
+    return "🔗 **API Links**\n\n" +
+           "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
+           "**📌 Farmer Registry API**\n" +
+           "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
+           "• Active Data: `http://164.100.126.46/api/farmer`\n" +
+           "• History Data: `http://164.100.126.46/api/farmer/parent`\n\n" +
+           "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
+           "**📌 GRVMR API**\n" +
+           "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
+           "• URL: `http://164.100.126.58/api/grvmr`";
+}
         
         // ==================== DATABASE QUERIES ====================
         if (message.includes('ror') && (message.includes('count') || message.includes('number')) && !message.includes('duplicate')) {
