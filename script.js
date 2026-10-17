@@ -602,8 +602,30 @@ if (message.includes('table schema') || message.includes('query for table schema
         
 
         if (message.includes('sdc')) {
-            return "🔐 **SDC Server Details:**\n\n• Node Internal IP: `10.182.95.136`\n• Node External IP: `164.100.126.44`\n• Server Name: `WEB-9/SSDC`\n• Server Password: `$$web9@12345$#`";
-        }
+    return "🔐 **SDC Server Details**\n\n" +
+           "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
+           "**📌 Website Server**\n" +
+           "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
+           "• Node Internal IP: `10.182.95.136`\n" +
+           "• Node External IP: `164.100.126.44`\n" +
+           "• Server Name: `WEB-9/SSDC`\n\n" +
+           "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
+           "**📌 API Server**\n" +
+           "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
+           "• Server IP: `10.182.98.47`\n" +
+           "• Public IP: `164.100.126.46`\n\n" +
+           "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
+           "**📌 VPN Details**\n" +
+           "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
+           "• VPN Password: `B1kr@mR@1`\n" +
+           "• Remote ID: `./administrator`\n" +
+           "• Remote Password: `Netspeq@2025`\n\n" +
+           "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
+           "**📌 Database**\n" +
+           "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
+           "• ID: `sa`\n" +
+           "• Password: `admin@123`";
+}
 
 
 // ==================== QUERY TO FIND BROKEN MOTHER PLOTS ====================
